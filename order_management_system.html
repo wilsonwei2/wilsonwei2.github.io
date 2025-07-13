@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Purchase Order Management</title>
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 2rem;
+      background-color: #f9f9f9;
+    }
+    .container {
+      max-width: 1400px;
+      margin: auto;
+      background-color: white;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    h2 {
+      text-align: center;
+      font-size: 3rem;
+    }
+    .form-row {
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      align-items: flex-end;
+    }
+	.form-row2 {
+	  max-width: 250px;
+	  width: 100%;
+	}
+    .form-group {
+      flex: 1;
+      min-width: 200px;
+      display: flex;
+      flex-direction: column;
+    }
+    input, select {
+      padding: 0.5rem;
+      height: 42px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .select2-container .select2-selection--single {
+      height: 42px;
+    }
+    .select2-selection__rendered {
+      line-height: 42px !important;
+    }
+    .select2-selection__arrow {
+      height: 42px !important;
+    }
+    .button-group {
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-start;
+      align-items: flex-end;
+    }
+    button {
+      padding: 0.5rem 1rem;
+      height: 42px;
+      font-size: 1rem;
+      border-radius: 6px;
+      background-color: #2563eb;
+      color: white;
+      border: none;
+      cursor: pointer;
+      min-width: 120px;
+    }
+    button:hover {
+      background-color: #1e40af;
+    }
+    a {
+      text-decoration: underline;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+    th, td {
+      padding: 0.75rem;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+    }
+    th {
+      background-color: #f1f5f9;
+    }
+    .pagination {
+      margin-top: 1rem;
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+    .pagination button {
+      padding: 0.5rem 1rem;
+    }
+    .draft-row {
+      color: green;
+      font-weight: bold;
+    }
+    .action-buttons {
+      display: none;
+      margin-top: 2rem;
+      justify-content: center;
+      gap: 1rem;
+    }
+	#tableBody input[type="checkbox"] {
+      transform: scale(0.5);
+	  margin-right: 10px;
+    }
+	.date-filter-row {
+	  display: flex;
+	  gap: 1rem;
+	  margin-bottom: 1.5rem;
+	  align-items: flex-end;
+	  justify-content: flex-start;
+	}
+
+	.fixed-width {
+	  width: 220px !important;
+	  flex: 0 0 auto !important;  /* 阻止 flex:1 扩展 */
+	}
+	.user-info {
+      text-align: right;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+	.logout {
+		text-align: right;
+		margin-top: 5px;
+		margin-bottom: 20px;
+	}
+	.logout button {
+		background-color: #ff4d4d;
+		color: white;
+		border: none;
+		padding: 4px 8px;
+		font-size: 13px;
+		cursor: pointer;
+		border-radius: 4px;
+	}
+	.logout button:hover {
+		background-color: #cc0000;
+	}
+  </style>
+</head>
+<body>
+<div class="user-info">
+    Logged in as: <span id="userEmail"></span>
+</div>
+<div class="logout">
+    <button onclick="logout()">Logout</button>
+</div>
+  
+<div class="container">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+  <h2 style="margin: 0 auto; font-size: 3rem;">Purchase Order Management</h2>
+  <div style="text-align: right; font-size: 14px;">
+    <span style="color: #007BFF;">V: 2.2.0</span><br/>
+    <a href="https://bh-purchase-order-management-zp.s3.us-east-1.amazonaws.com/update_logs.txt" target="_blank" style="color: #007BFF; text-decoration: underline;">Update_logs</a>
+  </div>
+  </div>
+
+
+  <div class="form-row">
+    <div class="form-group">
+      <label for="poNumber">PO Number</label>
+      <input type="text" id="poNumber"/>
+    </div>
+    <div class="form-group">
+      <label for="vendor">Vendor</label>
+      <select id="vendor">
+        <option value="">--Select Vendor--</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="order_status">Order Status</label>
+      <select id="order_status">
+        <option value="">--Select Status--</option>
+        <option value="draft">Draft</option>
+        <option value="submitted">Submitted</option>
+		<option value="rejected">Rejected</option>
+        <option value="canceled">Canceled</option>
+        <option value="closed">Closed</option>
+      </select>
+    </div>
+	<div class="form-group">
+      <label for="ItemName">Item Name</label>
+      <input type="text" id="ItemName"/>
+    </div>
+	<div class="form-group">
+    <label for="buyer">Buyer</label>
+    <input type="text" id="buyer"/>
+	</div>
+  </div>
+  <div class="date-filter-row">
+    <div class="form-group fixed-width">
+      <label for="startDate">Start Date(Created Date)</label>
+      <input type="date" id="startDate"/>
+    </div>
+    <div class="form-group fixed-width">
+      <label for="endDate">End Date(Created Date)</label>
+      <input type="date" id="endDate"/>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="button-group" style="width: 100%;">
+	  <div style="display: flex; gap: 1rem;">
+		<button onclick="searchOrders()">Search</button>
+		<button onclick="clearResults()">Clear</button>
+		<button onclick="openGoogleSheet()">Create New PO</button>
+	  </div>
+	  <div style="margin-left: auto;">
+		<button onclick="downloadCSV()">Export Search Results</button>
+	  </div>
+	</div>
+
+  </div>
+
+  <table id="resultsTable">
+    <thead>
+      <tr id="tableHeaders"></tr>
+    </thead>
+    <tbody id="tableBody"></tbody>
+  </table>
+
+  <div class="pagination" id="pagination"></div>
+
+  <div class="action-buttons" id="actionButtons">
+    <button onclick="sendBulkAction('submitted')">Submit</button>
+    <button onclick="sendBulkAction('canceled')">Cancel</button>
+    <button onclick="sendBulkAction('closed')">Close</button>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const email = localStorage.getItem("user_email");
+    if (!email) {
+      window.location.href = "login.html"; // 🔁 自动跳转回登录页
+    } else {
+      document.getElementById("userEmail").textContent = email; // 📨 显示邮箱
+    }
+  });
+
+  function logout() {
+    localStorage.removeItem("user_email"); // 🧹 清除登录信息
+    window.location.href = "login.html";   // 🔁 跳转到登录页
+  }
+</script>
+
+
+<script>
+  // set different google sheet link for different email account
+  function openGoogleSheet() {
+    const email = localStorage.getItem("user_email");
+    let sheetUrl = "";
+
+    switch (email) {
+      case "zhu.peng@frankandoak.com":
+        sheetUrl = "https://docs.google.com/spreadsheets/d/1eoYTV5HPNREpd3yejsuIVh2cZQN3nY28GQayBssS6uc/edit?gid=511352855#gid=511352855"; 
+        break;
+      case "wilson.wei@frankandoak.com":
+        sheetUrl = "https://docs.google.com/spreadsheets/d/1TtRmYvI28v0JGbKIcSDQ14eWFZ1N_t9Xu5GetkTJ-zg/edit?gid=511352855#gid=511352855";
+        break;
+      case "jayme.kushner@frankandoak.com":
+        sheetUrl = "https://docs.google.com/spreadsheets/d/1_tYM55wTTprp2ts5yZfos-PlaV6zqcCsXXFDQKASgYM/edit?gid=511352855#gid=511352855";
+        break;
+      case "kristinad@bohme.com":
+        sheetUrl = "https://docs.google.com/spreadsheets/d/185ytEq077QITk7RD3Vr5sXHOTBjVviB7Km4m0dcc4UE/edit?gid=511352855#gid=511352855";
+        break;
+      case "sarahh@bohme.com":
+        sheetUrl = "https://docs.google.com/spreadsheets/d/1nr6-JDyNELgiwFPp8jr3peVN5nMvRgfFjoLEk3_PUM8/edit?gid=511352855#gid=511352855";
+        break;
+      default:
+        alert("Your email is not authorized to create PO.");
+        return;
+    }
+
+    window.open(sheetUrl, "_blank");
+  }
+</script>
+
+
+<script>
+  const pageSize = 10;
+  let currentPage = 1;
+  let paginatedData = [];
+  let currentMsgDiv = null;
+
+  function loadVendors() {
+	showTemporaryMessage("Start the application , please wait","yellow","black");
+    fetch("https://inq7qmtb46.execute-api.us-east-1.amazonaws.com/default/BH_PO_tool_zp")
+      .then(res => res.json())
+      .then(response => {
+        const vendorSelect = document.getElementById("vendor");
+        response.forEach(vendor => {
+          const option = document.createElement("option");
+          option.value = vendor.vendor_name;
+          option.textContent = vendor.vendor_name;
+          vendorSelect.appendChild(option);
+        });
+        $('#vendor').select2({ width: '100%' });
+		hideTemporaryMessage();
+      });
+  }
+
+  function searchOrders(message = "Querying data...  please wait") {
+	
+	
+    const poNumber = document.getElementById("poNumber").value.trim();
+    const vendor = document.getElementById("vendor").value.trim();
+    const order_status = document.getElementById("order_status").value.trim();
+    const startDate = document.getElementById("startDate").value;
+    const endDate = document.getElementById("endDate").value;
+	const itemname = document.getElementById("ItemName").value;
+	const buyer = document.getElementById("buyer").value;
+
+    if (!poNumber && !vendor && !startDate && !endDate && !order_status && !itemname && !buyer) {
+      alert("Please enter at least one search condition.");
+      return;
+    }
+	
+	showTemporaryMessage(message,"yellow","black");
+	
+    const params = {
+      ...(poNumber && { po_number: poNumber }),
+      ...(vendor && { vendor }),
+      ...(order_status && { order_status }),
+	  ...(itemname && { Item_Name: itemname }),
+	  ...(buyer && { buyer: buyer }),
+      ...(startDate && { start_date: startDate }),
+      ...(endDate && { end_date: endDate })
+    };
+
+    fetch("https://w655lippb1.execute-api.us-east-1.amazonaws.com/default/BH_PO_tool_zp", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(params)
+    })
+    .then(res => res.json())
+    .then(data => {
+      paginatedData = data;
+      currentPage = 1;
+      renderTable();
+	  hideTemporaryMessage(); 
+    });
+  }
+
+  function renderTable() {
+    const start = (currentPage - 1) * pageSize;
+    const end = start + pageSize;
+    const currentData = paginatedData.slice(start, end);
+
+    const tableHeaders = document.getElementById("tableHeaders");
+    const tableBody = document.getElementById("tableBody");
+    tableHeaders.innerHTML = "";
+    tableBody.innerHTML = "";
+
+    if (currentData.length === 0) {
+      tableHeaders.innerHTML = "<th>No data</th>";
+      return;
+    }
+
+    const headers = Object.keys(currentData[0]);
+    const fullHeaders = ["Select", ...headers];
+    fullHeaders.forEach(header => {
+      const th = document.createElement("th");
+      th.textContent = header;
+      tableHeaders.appendChild(th);
+    });
+
+    currentData.forEach(row => {
+      const tr = document.createElement("tr");
+      if (row["PO Status"] && row["PO Status"].toLowerCase() === "draft") {
+        tr.classList.add("draft-row");
+      }
+
+      const checkboxTd = document.createElement("td");
+	  const checkbox = document.createElement("input");
+	  checkbox.type = "checkbox";
+	  checkbox.classList.add("row-select");
+	  checkbox.value = row["PO Number"];
+
+	  // 禁用 canceled 或 closed 状态的 checkbox
+	  const status = row["PO Status"]?.toLowerCase();
+	  if (status === "canceled" || status === "closed") {
+	    checkbox.disabled = true;
+	  }
+
+	  checkbox.addEventListener("change", toggleActionButtons);
+	  checkboxTd.appendChild(checkbox);
+	  tr.appendChild(checkboxTd);
+
+      headers.forEach(key => {
+        const td = document.createElement("td");
+        if (key === "PO Number") {
+          const a = document.createElement("a");
+          const status_code = row["PO Status"]?.toLowerCase();
+          let webAppUrl = (status_code === "draft" || status_code === "submitted" || status_code === "rejected")
+            ? "https://script.google.com/macros/s/AKfycbwj3iQ4jaoP_21w1St0ySXgcUoWeyJzdKFs-J90_h1mbEtA3xTNEsoUouUGLlv8F3N9bg/exec"
+            : "https://script.google.com/macros/s/AKfycby6bT_tP-GcFMI0IJFdUoIQjHW9_2gArcdkaRhQhRj_4GJVNW7HTAHxTPQYPzc5D4Bn/exec";
+          a.href = (status_code === "canceled" || status_code === "closed") ?
+            "https://docs.google.com/spreadsheets/d/1iVgI6V_roiiG2_XoajiPK8XufHtQsfyD2QFf9tqPPyI/edit?gid=979965713#gid=979965713" :
+            "https://docs.google.com/spreadsheets/d/1I_pM6aRreXk_9C9yapL5njXnk78KhTUjchJ6DXRtbXI/edit?gid=1883855683#gid=1883855683";
+          a.textContent = row[key];
+          a.target = "_blank";
+          a.onclick = function (event) {
+            event.preventDefault();
+			
+			showTemporaryMessage("Redirecting, please wait...","yellow","black"); // 加入提示
+			
+            const url = `${webAppUrl}?po_number=${encodeURIComponent(row[key])}`;
+            fetch(url)
+              .then(response => response.text())
+              .then(() => {
+				hideTemporaryMessage(); 
+				window.open(a.href, "_blank");
+			  })
+              .catch(() => {
+				hideTemporaryMessage();
+				alert("Failed to send PO number to Web App.");
+			  });
+          };
+          const icon = document.createElement("i");
+          icon.classList.add("fas", "fa-external-link-alt");
+          icon.style.marginLeft = "5px";
+          a.appendChild(icon);
+          td.appendChild(a);
+        } else {
+          td.textContent = row[key];
+        }
+        tr.appendChild(td);
+      });
+
+      tableBody.appendChild(tr);
+    });
+
+    renderPagination();
+    toggleActionButtons();
+  }
+
+  function renderPagination() {
+    const totalPages = Math.ceil(paginatedData.length / pageSize);
+    const pagination = document.getElementById("pagination");
+    pagination.innerHTML = "";
+    for (let i = 1; i <= totalPages; i++) {
+      const btn = document.createElement("button");
+      btn.textContent = i;
+      if (i === currentPage) btn.style.fontWeight = "bold";
+      btn.onclick = () => {
+        currentPage = i;
+        renderTable();
+      };
+      pagination.appendChild(btn);
+    }
+  }
+
+  function clearResults() {
+    document.getElementById("poNumber").value = "";
+    $('#vendor').val('').trigger('change');
+    document.getElementById("order_status").value = "";
+	document.getElementById("ItemName").value = "";
+	document.getElementById("buyer").value = "";
+    document.getElementById("startDate").value = "";
+    document.getElementById("endDate").value = "";
+    paginatedData = [];
+    document.getElementById("tableHeaders").innerHTML = "";
+    document.getElementById("tableBody").innerHTML = "";
+    document.getElementById("pagination").innerHTML = "";
+    document.getElementById("actionButtons").style.display = "none";
+  }
+
+  function toggleActionButtons() {
+    const checkboxes = document.querySelectorAll(".row-select:checked");
+    document.getElementById("actionButtons").style.display = checkboxes.length > 0 ? "flex" : "none";
+  }
+
+  function sendBulkAction(action) {
+  
+    const selectedPOs = Array.from(document.querySelectorAll(".row-select:checked"))
+      .map(cb => cb.value);
+    if (selectedPOs.length === 0) return;
+	
+	showTemporaryMessage("The change request has been submitted, please wait...","yellow","black"); // 新增	
+	
+    fetch("https://nsy7navyr7.execute-api.us-east-1.amazonaws.com/default/BH_PO_tool_zp", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action, po_numbers: selectedPOs })
+    })
+    .then(response => response.json())
+    .then(data => {
+      alert(`Action '${action}' completed: ${JSON.stringify(data)}`);
+      searchOrders("Refreshing Data ... please wait");
+    })
+    .catch(error => {
+      console.error("Error:", error);
+      alert("Failed to perform action.");
+    });
+  }
+
+  window.onload = function () {
+      loadVendors();
+    };
+	
+  function showTemporaryMessage(message,background_color,font_color) {
+    if (currentMsgDiv) {
+		currentMsgDiv.remove();  // 移除之前的提示框
+	  }
+
+	const msgDiv = document.createElement("div");
+	msgDiv.textContent = message;
+	msgDiv.style.position = "fixed";
+	msgDiv.style.top = "50%";
+	msgDiv.style.left = "50%";
+	msgDiv.style.transform = "translate(-50%, -50%)";
+	msgDiv.style.backgroundColor = background_color;
+	msgDiv.style.color = font_color;
+	msgDiv.style.padding = "1rem 2rem";
+    msgDiv.style.borderRadius = "8px";
+	msgDiv.style.boxShadow = "0 2px 10px rgba(0, 0, 0, 0.2)";
+	msgDiv.style.zIndex = 9999;
+	document.body.appendChild(msgDiv);
+
+	currentMsgDiv = msgDiv;
+  }
+
+  function hideTemporaryMessage() {
+    if (currentMsgDiv) {
+      currentMsgDiv.remove();
+      currentMsgDiv = null;
+    }
+  }
+
+  function downloadCSV() {
+    if (paginatedData.length === 0) {
+	  alert("No data to export.");
+	  return;
+    }
+
+    const headers = Object.keys(paginatedData[0]);
+    const rows = paginatedData.map(row =>
+	  headers.map(header => `"${(row[header] ?? "").toString().replace(/"/g, '""')}"`).join(",")
+    );
+
+    const csvContent = [
+	  headers.join(","),
+  	...rows
+    ].join("\n");
+
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `purchase_orders_${new Date().toISOString().slice(0, 10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+</script>
+</body>
+</html>
