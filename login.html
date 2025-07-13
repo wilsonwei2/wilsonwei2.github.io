@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Login with Google</title>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script>
+      function handleCredentialResponse(response) {
+        const token = response.credential;
+        console.log("ID Token:", token);
+        // You can decode or send this token to your backend for verification
+        document.getElementById("message").innerText = "Login successful!";
+      }
+
+      window.onload = function () {
+        google.accounts.id.initialize({
+          client_id: "612806372463-vchdq4uinqa6hda6962lbjv3a5rt0iji.apps.googleusercontent.com", // ✅ Your client ID
+          callback: handleCredentialResponse
+        });
+
+        google.accounts.id.renderButton(
+          document.getElementById("g_id_signin"),
+          { theme: "outline", size: "large" }
+        );
