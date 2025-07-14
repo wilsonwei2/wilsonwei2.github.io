@@ -1,0 +1,9 @@
+--Version: 2.1.0   [2025-07-13]
+1.add user email login step;
+
+--Version: 2.0.1   [2025-07-02]
+1.Change the names of some functional blocks
+
+--Version: 2.0.0   [2025-07-02]
+1. Removed the original FAO brand icon from the login webpage.
+2. Added collapsible/expandable interaction functionality to each main business section (first-level module) and its subsections (second-level modules) on the main dashboard. Users can click the headers to expand or collapse content, improving the organization and readability of the page.
