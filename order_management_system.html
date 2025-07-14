@@ -379,7 +379,8 @@
       return;
     }
 
-    const headers = Object.keys(currentData[0]);
+    // const headers = Object.keys(currentData[0]);
+	const headers = Object.keys(currentData[0]).filter(h => h !== "ORDER_REVIEW_GOOGLE_SHEET_URL"); //不列出url
     const fullHeaders = ["Select", ...headers];
     fullHeaders.forEach(header => {
       const th = document.createElement("th");
@@ -398,13 +399,13 @@
 	  checkbox.type = "checkbox";
 	  checkbox.classList.add("row-select");
 	  checkbox.value = row["PO Number"];
-
+	
 	  // 禁用 canceled 或 closed 状态的 checkbox
 	  const status = row["PO Status"]?.toLowerCase();
 	  if (status === "canceled" || status === "closed") {
 	    checkbox.disabled = true;
 	  }
-
+	
 	  checkbox.addEventListener("change", toggleActionButtons);
 	  checkboxTd.appendChild(checkbox);
 	  tr.appendChild(checkboxTd);
