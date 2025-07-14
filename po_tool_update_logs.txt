@@ -1,4 +1,8 @@
---version: 2.2.0 [2025-7-13]
+--Version: 2.2.1 [2025-7-14]
+1.set new revision google sheet url as backend url of each po_number.
+2.remove the rule of order status judgment.
+
+--Version: 2.2.0 [2025-7-13]
 1.add user email login step.
 2.turn to different 'PO Creation' google sheet according to different user email.
 
