@@ -320,8 +320,6 @@
   }
 
   function searchOrders(message = "Querying data...  please wait") {
-	
-	
     const poNumber = document.getElementById("poNumber").value.trim();
     const vendor = document.getElementById("vendor").value.trim();
     const order_status = document.getElementById("order_status").value.trim();
@@ -415,24 +413,24 @@
         if (key === "PO Number") {
           const a = document.createElement("a");
           // const status_code = row["PO Status"]?.toLowerCase();
-	  const sheetUrl = row["ORDER_REVIEW_GOOGLE_SHEET_URL"]; //每个po number的review Google sheet url
-
-	  a.href = sheetUrl || "#";
-	  a.textContent = row[key];
-	  a.target = "_blank";
-
-	  a.onclick = function (event) {
-	    if (!sheetUrl || sheetUrl === "#") {
-	      event.preventDefault();
-	      alert("No Google Sheet URL found for this PO.");
-	    }
-	  };
-          
-          const icon = document.createElement("i");
-          icon.classList.add("fas", "fa-external-link-alt");
-          icon.style.marginLeft = "5px";
-          a.appendChild(icon);
-          td.appendChild(a);
+		  const sheetUrl = row["ORDER_REVIEW_GOOGLE_SHEET_URL"]; //每个po number的review Google sheet url
+	
+		  a.href = sheetUrl || "#";
+		  a.textContent = row[key];
+		  a.target = "_blank";
+	
+		  a.onclick = function (event) {
+		    if (!sheetUrl || sheetUrl === "#") {
+		      event.preventDefault();
+		      alert("No Google Sheet URL found for this PO.");
+		    }
+		  };
+	          
+		  const icon = document.createElement("i");
+		  icon.classList.add("fas", "fa-external-link-alt");
+		  icon.style.marginLeft = "5px";
+		  a.appendChild(icon);
+		  td.appendChild(a);
         } else {
           td.textContent = row[key];
         }
