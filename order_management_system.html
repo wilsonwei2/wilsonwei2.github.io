@@ -412,32 +412,20 @@
         const td = document.createElement("td");
         if (key === "PO Number") {
           const a = document.createElement("a");
-          const status_code = row["PO Status"]?.toLowerCase();
-          let webAppUrl = (status_code === "draft" || status_code === "submitted" || status_code === "rejected")
-            ? "https://script.google.com/macros/s/AKfycbwj3iQ4jaoP_21w1St0ySXgcUoWeyJzdKFs-J90_h1mbEtA3xTNEsoUouUGLlv8F3N9bg/exec"
-            : "https://script.google.com/macros/s/AKfycby6bT_tP-GcFMI0IJFdUoIQjHW9_2gArcdkaRhQhRj_4GJVNW7HTAHxTPQYPzc5D4Bn/exec";
-          a.href = (status_code === "canceled" || status_code === "closed") ?
-            "https://docs.google.com/spreadsheets/d/1iVgI6V_roiiG2_XoajiPK8XufHtQsfyD2QFf9tqPPyI/edit?gid=979965713#gid=979965713" :
-            "https://docs.google.com/spreadsheets/d/1I_pM6aRreXk_9C9yapL5njXnk78KhTUjchJ6DXRtbXI/edit?gid=1883855683#gid=1883855683";
-          a.textContent = row[key];
-          a.target = "_blank";
-          a.onclick = function (event) {
-            event.preventDefault();
-			
-			showTemporaryMessage("Redirecting, please wait...","yellow","black"); // 加入提示
-			
-            const url = `${webAppUrl}?po_number=${encodeURIComponent(row[key])}`;
-            fetch(url)
-              .then(response => response.text())
-              .then(() => {
-				hideTemporaryMessage(); 
-				window.open(a.href, "_blank");
-			  })
-              .catch(() => {
-				hideTemporaryMessage();
-				alert("Failed to send PO number to Web App.");
-			  });
-          };
+          // const status_code = row["PO Status"]?.toLowerCase();
+	  const sheetUrl = row["ORDER_REVIEW_GOOGLE_SHEET_URL"]; //每个po number的review Google sheet url
+
+	  a.href = sheetUrl || "#";
+	  a.textContent = row[key];
+	  a.target = "_blank";
+
+	  a.onclick = function (event) {
+	    if (!sheetUrl || sheetUrl === "#") {
+	      event.preventDefault();
+	      alert("No Google Sheet URL found for this PO.");
+	    }
+	  };
+          
           const icon = document.createElement("i");
           icon.classList.add("fas", "fa-external-link-alt");
           icon.style.marginLeft = "5px";
