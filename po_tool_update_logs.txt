@@ -1,3 +1,6 @@
+--Version: 2.3.0 [2025-7-15]
+1.add new column: po_products
+2.set herf link for po_products
 --Version: 2.2.1 [2025-7-14]
 1.set new revision google sheet url as backend url of each po_number.
 2.remove the rule of order status judgment.
