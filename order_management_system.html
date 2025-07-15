@@ -379,6 +379,7 @@
 
     // const headers = Object.keys(currentData[0]);
     const headers = Object.keys(currentData[0]).filter(h => h !== "ORDER_REVIEW_GOOGLE_SHEET_URL"); //不列出url
+    headers.splice(1, 0, "po_products"); // 在 PO Number 后插入 po_products
     const fullHeaders = ["Select", ...headers];
     fullHeaders.forEach(header => {
       const th = document.createElement("th");
@@ -431,7 +432,19 @@
 		  icon.style.marginLeft = "5px";
 		  a.appendChild(icon);
 		  td.appendChild(a);
-        } else {
+        } else if (key === "po_products"){
+	  const a = document.createElement("a");
+	  a.href = "https://docs.google.com/spreadsheets/d/1zInGyafDk2Dl8XvpdbLd1PJNY_Gkg9IvbwvHsEM9dwU/edit?gid=1809308579#gid=1809308579";
+	  a.textContent = "product_management";
+	  a.target = "_blank";
+	
+	  const icon = document.createElement("i");
+	  icon.classList.add("fas", "fa-external-link-alt");
+	  icon.style.marginLeft = "5px";
+	  a.appendChild(icon);
+	
+	  td.appendChild(a);	
+	} else {
           td.textContent = row[key];
         }
         tr.appendChild(td);
