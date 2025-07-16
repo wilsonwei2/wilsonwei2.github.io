@@ -1,3 +1,6 @@
+--Version: 2.3.2 [2025-7-16]
+1.add pop message when turn to po creation google sheet.
+
 --Version: 2.3.1 [2025-7-16]
 1.Change the Google sheet method of jumping to create a PO to dynamically obtain the Google sheet URL
 
