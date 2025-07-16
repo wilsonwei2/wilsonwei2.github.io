@@ -329,7 +329,29 @@
   let currentPage = 1;
   let paginatedData = [];
   let currentMsgDiv = null;
+  let productManagementUrl = "";
 
+
+
+  async function fetchProductManagementUrl() {
+    const email = localStorage.getItem("user_email");
+    if (!email) return;
+
+    const apiUrl = "https://script.google.com/macros/s/AKfycbzXVEsecuPGoECZW4LOkn-zvIAZ6M6rJ4a6vuX5X-fhY4-DOa2UVFumwkMjN4S_-bKP/exec?email=" + encodeURIComponent(email);
+
+    try {
+	  const response = await fetch(apiUrl);
+  	  const data = await response.json();
+
+	  if (data.product_url) {
+	    productManagementUrl = data.product_url;
+	  }
+    } catch (err) {
+	  console.error("Error fetching product_management_url:", err);
+    }
+  }
+
+  
   function loadVendors() {
 	showTemporaryMessage("Start the application , please wait","yellow","black");
     fetch("https://inq7qmtb46.execute-api.us-east-1.amazonaws.com/default/BH_PO_tool_zp")
@@ -347,48 +369,57 @@
       });
   }
 
-  function searchOrders(message = "Querying data...  please wait") {
+  async function searchOrders(message = "Querying data...  please wait") {
     const poNumber = document.getElementById("poNumber").value.trim();
     const vendor = document.getElementById("vendor").value.trim();
     const order_status = document.getElementById("order_status").value.trim();
     const startDate = document.getElementById("startDate").value;
     const endDate = document.getElementById("endDate").value;
-	const itemname = document.getElementById("ItemName").value;
-	const buyer = document.getElementById("buyer").value;
+    const itemname = document.getElementById("ItemName").value;
+    const buyer = document.getElementById("buyer").value;
 
     if (!poNumber && !vendor && !startDate && !endDate && !order_status && !itemname && !buyer) {
       alert("Please enter at least one search condition.");
       return;
     }
-	
-	showTemporaryMessage(message,"yellow","black");
-	
+
+    showTemporaryMessage(message, "yellow", "black");
+
     const params = {
       ...(poNumber && { po_number: poNumber }),
       ...(vendor && { vendor }),
       ...(order_status && { order_status }),
-	  ...(itemname && { Item_Name: itemname }),
-	  ...(buyer && { buyer: buyer }),
+      ...(itemname && { Item_Name: itemname }),
+      ...(buyer && { buyer: buyer }),
       ...(startDate && { start_date: startDate }),
       ...(endDate && { end_date: endDate })
     };
 
-    // https://w655lippb1.execute-api.us-east-1.amazonaws.com/default/BH_PO_tool_zp   汇总函数中查询订单列表的 api url
-    fetch("https://k0iwtzc8if.execute-api.us-east-1.amazonaws.com/default/BH_query_purchase_orders_to_webpage_zp", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(params)
-    })
-    .then(res => res.json())
-    .then(data => {
+    try {
+      const res = await fetch("https://k0iwtzc8if.execute-api.us-east-1.amazonaws.com/default/BH_query_purchase_orders_to_webpage_zp", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(params)
+      });
+
+      const data = await res.json();
       paginatedData = data;
       currentPage = 1;
+
+      // 🔑 加这一行：从用户 email 获取 product management URL
+      await fetchProductManagementUrl();
+
       renderTable();
-	  hideTemporaryMessage(); 
-    });
+      hideTemporaryMessage();
+    } catch (err) {
+      console.error("Error during search:", err);
+      hideTemporaryMessage();
+      alert("Failed to fetch order data.");
+    }
   }
+	
 
   function renderTable() {
     const start = (currentPage - 1) * pageSize;
@@ -462,10 +493,17 @@
 		  td.appendChild(a);
         } else if (key === "po_products"){
 	  const a = document.createElement("a");
-	  a.href = "https://docs.google.com/spreadsheets/d/1zInGyafDk2Dl8XvpdbLd1PJNY_Gkg9IvbwvHsEM9dwU/edit?gid=1809308579#gid=1809308579";
+	  a.href = productManagementUrl || "#";
 	  a.textContent = "product_management";
 	  a.target = "_blank";
-	
+
+ 	  a.onclick = function (event) {
+    	if (!productManagementUrl) {
+      		event.preventDefault();
+      		alert("No Product Management Sheet URL found for this user.");
+    	}
+  	  };
+			
 	  const icon = document.createElement("i");
 	  icon.classList.add("fas", "fa-external-link-alt");
 	  icon.style.marginLeft = "5px";
