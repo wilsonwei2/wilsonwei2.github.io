@@ -297,6 +297,7 @@
 
 <script>
   async function openGoogleSheet() {
+    showTemporaryMessage("Redirecting, please wait","yellow","black");
     const email = localStorage.getItem("user_email");
     if (!email) {
       alert("User not signed in.");
