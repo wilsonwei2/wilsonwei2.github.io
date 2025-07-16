@@ -488,7 +488,9 @@
 	            alert("No Product Management Sheet or WebApp URL found.");
 	            return;
 	          }
-	
+			
+		  showTemporaryMessage(`Opening sheet for PO: ${poNumber} ...`, "yellow", "black");
+			
 	          // 👇 拼接 WebApp URL，发送 po_number
 	          const renameUrl = `${productManagementWebAppUrl}?po_number=${encodeURIComponent(poNumber)}`;
 	
@@ -504,7 +506,9 @@
 	          } catch (err) {
 	            console.error("Error calling rename WebApp:", err);
 	            alert("Error calling WebApp to rename Sheet.");
-	          }
+	          } finally{
+		    hideTemporaryMessage(); 
+		  }
 	        };
 	
 	        const icon = document.createElement("i");
