@@ -263,38 +263,6 @@
   }
 </script>
 
-
-<!-- <script>
-  // set different google sheet link for different email account
-  function openGoogleSheet() {
-    const email = localStorage.getItem("user_email");
-    let sheetUrl = "";
-
-    switch (email) {
-      case "zhu.peng@frankandoak.com":
-        sheetUrl = "https://docs.google.com/spreadsheets/d/1gVbRX1a27kIjffiPkR8a7jZmefci7Bj33EfY3hiy85U/edit?gid=511352855#gid=511352855"; 
-        break;
-      case "wilson.wei@frankandoak.com":
-        sheetUrl = "https://docs.google.com/spreadsheets/d/18BxKTqQ13WIKMyOv5s_WRcY6ehR6h-DTyTp-TeR7eLg/edit?gid=511352855#gid=511352855";
-        break;
-      case "jayme.kushner@frankandoak.com":
-        sheetUrl = "https://docs.google.com/spreadsheets/d/1MrGjHj0KZB42iVBqJYAVzNnev_ch4nKWAKxGadmz7mQ/edit?gid=511352855#gid=511352855";
-        break;
-      case "kristinad@bohme.com":
-        sheetUrl = "https://docs.google.com/spreadsheets/d/185ytEq077QITk7RD3Vr5sXHOTBjVviB7Km4m0dcc4UE/edit?gid=511352855#gid=511352855";
-        break;
-      case "sarahh@bohme.com":
-        sheetUrl = "https://docs.google.com/spreadsheets/d/1nr6-JDyNELgiwFPp8jr3peVN5nMvRgfFjoLEk3_PUM8/edit?gid=511352855#gid=511352855";
-        break;
-      default:
-        alert("Your email is not authorized to create PO.");
-        return;
-    }
-
-    window.open(sheetUrl, "_blank");
-  }
-</script> -->
-
 <script>
   async function openGoogleSheet() {
     showTemporaryMessage("Redirecting, please wait","yellow","black");
@@ -494,39 +462,19 @@
 		  icon.style.marginLeft = "5px";
 		  a.appendChild(icon);
 		  td.appendChild(a);
-        } else if (key === "po_products") {
+        } else if (key === "po_products"){
 	  const a = document.createElement("a");
-	  a.href = "#";
+	  a.href = "https://docs.google.com/spreadsheets/d/1zInGyafDk2Dl8XvpdbLd1PJNY_Gkg9IvbwvHsEM9dwU/edit?gid=1809308579#gid=1809308579";
 	  a.textContent = "product_management";
-	  a.style.cursor = "pointer";
+	  a.target = "_blank";
 	
-	  a.onclick = async function (event) {
-	    event.preventDefault();
+	  const icon = document.createElement("i");
+	  icon.classList.add("fas", "fa-external-link-alt");
+	  icon.style.marginLeft = "5px";
+	  a.appendChild(icon);
 	
-	    const poNumber = row["PO Number"];
-	    const email = localStorage.getItem("user_email");
-	
-	    if (!productManagementUrl || !productManagementWebAppUrl) {
-	      alert("No Product Management Sheet or WebApp URL found.");
-	      return;
-	    }
-	
-	    const renameUrl = `${productManagementWebAppUrl}?po_number=${encodeURIComponent(poNumber)}`;
-	
-	    try {
-	      const res = await fetch(renameUrl);
-	      const result = await res.text();
-	
-	      if (result.toLowerCase().includes("success")) {
-	        window.open(productManagementUrl, "_blank");
-	      } else {
-	        alert("Failed to rename Google Sheet before opening.");
-	      }
-	    } catch (err) {
-	      console.error("Error calling rename WebApp:", err);
-	      alert("Error calling WebApp to rename Sheet.");
-	    }
-	  };
+	  td.appendChild(a);	
+	}
 	
 	  const icon = document.createElement("i");
 	  icon.classList.add("fas", "fa-external-link-alt");
