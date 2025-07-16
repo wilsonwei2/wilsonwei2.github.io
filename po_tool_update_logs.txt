@@ -1,3 +1,6 @@
+--Version: 2.3.4 [2025-7-16]
+1.turn to different product management webapp url based on email
+
 --Version: 2.3.3 [2025-7-16]
 1.Change the Google sheet method of jumping to product management sheet to dynamically obtain the Google sheet URL
 
