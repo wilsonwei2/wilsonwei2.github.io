@@ -397,107 +397,139 @@
     }
   }
 
-  function renderTable() {
-    const start = (currentPage - 1) * pageSize;
-    const end = start + pageSize;
-    const currentData = paginatedData.slice(start, end);
-
-    const tableHeaders = document.getElementById("tableHeaders");
-    const tableBody = document.getElementById("tableBody");
-    tableHeaders.innerHTML = "";
-    tableBody.innerHTML = "";
-
-    if (currentData.length === 0) {
-      tableHeaders.innerHTML = "<th>No data</th>";
-      return;
-    }
-
-    // const headers = Object.keys(currentData[0]);
-    const headers = Object.keys(currentData[0]).filter(h => h !== "ORDER_REVIEW_GOOGLE_SHEET_URL"); //不列出url
-    headers.splice(1, 0, "po_products"); // 在 PO Number 后插入 po_products
-    const fullHeaders = ["Select", ...headers];
-    fullHeaders.forEach(header => {
-      const th = document.createElement("th");
-      th.textContent = header;
-      tableHeaders.appendChild(th);
-    });
-
-    currentData.forEach(row => {
-      const tr = document.createElement("tr");
-      if (row["PO Status"] && row["PO Status"].toLowerCase() === "draft") {
-        tr.classList.add("draft-row");
-      }
-
-      const checkboxTd = document.createElement("td");
-	  const checkbox = document.createElement("input");
-	  checkbox.type = "checkbox";
-	  checkbox.classList.add("row-select");
-	  checkbox.value = row["PO Number"];
+	function renderTable() {
+	  const start = (currentPage - 1) * pageSize;
+	  const end = start + pageSize;
+	  const currentData = paginatedData.slice(start, end);
 	
-	  // 禁用 canceled 或 closed 状态的 checkbox
-	  const status = row["PO Status"]?.toLowerCase();
-	  if (status === "canceled" || status === "closed") {
-	    checkbox.disabled = true;
+	  const tableHeaders = document.getElementById("tableHeaders");
+	  const tableBody = document.getElementById("tableBody");
+	  tableHeaders.innerHTML = "";
+	  tableBody.innerHTML = "";
+	
+	  if (currentData.length === 0) {
+	    tableHeaders.innerHTML = "<th>No data</th>";
+	    return;
 	  }
 	
-	  checkbox.addEventListener("change", toggleActionButtons);
-	  checkboxTd.appendChild(checkbox);
-	  tr.appendChild(checkboxTd);
-
-      headers.forEach(key => {
-        const td = document.createElement("td");
-        if (key === "PO Number") {
-          const a = document.createElement("a");
-          // const status_code = row["PO Status"]?.toLowerCase();
-		  const sheetUrl = row["ORDER_REVIEW_GOOGLE_SHEET_URL"]; //每个po number的review Google sheet url
+	  const headers = Object.keys(currentData[0]).filter(h => h !== "ORDER_REVIEW_GOOGLE_SHEET_URL");
+	  headers.splice(1, 0, "po_products");
+	  const fullHeaders = ["Select", ...headers];
 	
-		  a.href = sheetUrl || "#";
-		  a.textContent = row[key];
-		  a.target = "_blank";
+	  fullHeaders.forEach(header => {
+	    const th = document.createElement("th");
+	    th.textContent = header;
+	    tableHeaders.appendChild(th);
+	  });
 	
-		  a.onclick = function (event) {
-		    if (!sheetUrl || sheetUrl === "#") {
-		      event.preventDefault();
-		      alert("No Google Sheet URL found for this PO.");
-		    }
-		  };
-	          
-		  const icon = document.createElement("i");
-		  icon.classList.add("fas", "fa-external-link-alt");
-		  icon.style.marginLeft = "5px";
-		  a.appendChild(icon);
-		  td.appendChild(a);
-        } else if (key === "po_products"){
-	  const a = document.createElement("a");
-	  a.href = productManagementUrl || "#";
-	  a.textContent = "product_management";
-	  a.target = "_blank";
-
- 	  a.onclick = function (event) {
-    	if (!productManagementUrl) {
-      		event.preventDefault();
-      		alert("No Product Management Sheet URL found for this user.");
-    	}
-  	  };
-			
-	  const icon = document.createElement("i");
-	  icon.classList.add("fas", "fa-external-link-alt");
-	  icon.style.marginLeft = "5px";
-	  a.appendChild(icon);
+	  currentData.forEach(row => {
+	    const tr = document.createElement("tr");
+	    if (row["PO Status"] && row["PO Status"].toLowerCase() === "draft") {
+	      tr.classList.add("draft-row");
+	    }
 	
-	  td.appendChild(a);	
-	} else {
-          td.textContent = row[key];
-        }
-        tr.appendChild(td);
-      });
+	    // ✅ 选择框列
+	    const checkboxTd = document.createElement("td");
+	    const checkbox = document.createElement("input");
+	    checkbox.type = "checkbox";
+	    checkbox.classList.add("row-select");
+	    checkbox.value = row["PO Number"];
+	
+	    const status = row["PO Status"]?.toLowerCase();
+	    if (status === "canceled" || status === "closed") {
+	      checkbox.disabled = true;
+	    }
+	
+	    checkbox.addEventListener("change", toggleActionButtons);
+	    checkboxTd.appendChild(checkbox);
+	    tr.appendChild(checkboxTd);
+	
+	    headers.forEach(key => {
+	      const td = document.createElement("td");
+	
+	      // ✅ PO Number 列
+	      if (key === "PO Number") {
+	        const a = document.createElement("a");
+	        const sheetUrl = row["ORDER_REVIEW_GOOGLE_SHEET_URL"];
+	
+	        a.href = sheetUrl || "#";
+	        a.textContent = row[key];
+	        a.target = "_blank";
+	
+	        a.onclick = function (event) {
+	          if (!sheetUrl || sheetUrl === "#") {
+	            event.preventDefault();
+	            alert("No Google Sheet URL found for this PO.");
+	          }
+	        };
+	
+	        const icon = document.createElement("i");
+	        icon.classList.add("fas", "fa-external-link-alt");
+	        icon.style.marginLeft = "5px";
+	        a.appendChild(icon);
+	
+	        td.appendChild(a);
+	      }
+	
+	      // ✅ product_management 列
+	      else if (key === "po_products") {
+	        const a = document.createElement("a");
+	        a.href = "#";
+	        a.textContent = "product_management";
+	        a.style.cursor = "pointer";
+	
+	        a.onclick = async function (event) {
+	          event.preventDefault();
+	
+	          const poNumber = row["PO Number"];
+	          const email = localStorage.getItem("user_email");
+	
+	          if (!productManagementUrl || !productManagementWebAppUrl) {
+	            alert("No Product Management Sheet or WebApp URL found.");
+	            return;
+	          }
+	
+	          // 👇 拼接 WebApp URL，发送 po_number
+	          const renameUrl = `${productManagementWebAppUrl}?po_number=${encodeURIComponent(poNumber)}`;
+	
+	          try {
+	            const res = await fetch(renameUrl);
+	            const result = await res.text();
+	
+	            if (result.toLowerCase().includes("success") || result.toLowerCase().includes("ok")) {
+	              window.open(productManagementUrl, "_blank");
+	            } else {
+	              alert("Failed to rename Google Sheet before opening.");
+	            }
+	          } catch (err) {
+	            console.error("Error calling rename WebApp:", err);
+	            alert("Error calling WebApp to rename Sheet.");
+	          }
+	        };
+	
+	        const icon = document.createElement("i");
+	        icon.classList.add("fas", "fa-external-link-alt");
+	        icon.style.marginLeft = "5px";
+	        a.appendChild(icon);
+	
+	        td.appendChild(a);
+	      }
+	
+	      // ✅ 其他字段正常显示
+	      else {
+	        td.textContent = row[key];
+	      }
+	
+	      tr.appendChild(td);
+	    });
+	
+	    tableBody.appendChild(tr);
+	  });
+	
+	  renderPagination();
+	  toggleActionButtons();
+	}
 
-      tableBody.appendChild(tr);
-    });
-
-    renderPagination();
-    toggleActionButtons();
-  }
 
   function renderPagination() {
     const totalPages = Math.ceil(paginatedData.length / pageSize);
