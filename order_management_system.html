@@ -247,57 +247,84 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
+  const pageSize = 10;
+  let currentPage = 1;
+  let paginatedData = [];
+  let currentMsgDiv = null;
+  let productManagementUrl = "";
+  let productManagementWebAppUrl = "";
+
+  document.addEventListener("DOMContentLoaded", async function () {
     const email = localStorage.getItem("user_email");
     if (!email) {
-      window.location.href = "https://wilsonwei2.github.io/Tool_login.html"; // 🔁 自动跳转回登录页
+      window.location.href = "https://wilsonwei2.github.io/Tool_login.html";
+      return;
     } else {
-      document.getElementById("userEmail").textContent = email; // 📨 显示邮箱
+      document.getElementById("userEmail").textContent = email;
     }
+
+    showTemporaryMessage("Loading... please wait", "yellow", "black");
+
+    try {
+      await fetchProductManagementUrl();
+      loadVendors();
+    } catch (err) {
+      console.error("Initialization failed:", err);
+      alert("Error during page initialization.");
+    }
+
+    hideTemporaryMessage();
   });
 
   function logout() {
-    localStorage.removeItem("user_email"); // 🧹 清除登录信息
-    window.location.href = "https://wilsonwei2.github.io/Tool_login.html";   // 🔁 跳转到登录页
+    localStorage.removeItem("user_email");
+    window.location.href = "https://wilsonwei2.github.io/Tool_login.html";
   }
-</script>
 
-
-<!-- <script>
-  // set different google sheet link for different email account
-  function openGoogleSheet() {
+  async function fetchProductManagementUrl() {
     const email = localStorage.getItem("user_email");
-    let sheetUrl = "";
+    if (!email) return;
 
-    switch (email) {
-      case "zhu.peng@frankandoak.com":
-        sheetUrl = "https://docs.google.com/spreadsheets/d/1gVbRX1a27kIjffiPkR8a7jZmefci7Bj33EfY3hiy85U/edit?gid=511352855#gid=511352855"; 
-        break;
-      case "wilson.wei@frankandoak.com":
-        sheetUrl = "https://docs.google.com/spreadsheets/d/18BxKTqQ13WIKMyOv5s_WRcY6ehR6h-DTyTp-TeR7eLg/edit?gid=511352855#gid=511352855";
-        break;
-      case "jayme.kushner@frankandoak.com":
-        sheetUrl = "https://docs.google.com/spreadsheets/d/1MrGjHj0KZB42iVBqJYAVzNnev_ch4nKWAKxGadmz7mQ/edit?gid=511352855#gid=511352855";
-        break;
-      case "kristinad@bohme.com":
-        sheetUrl = "https://docs.google.com/spreadsheets/d/185ytEq077QITk7RD3Vr5sXHOTBjVviB7Km4m0dcc4UE/edit?gid=511352855#gid=511352855";
-        break;
-      case "sarahh@bohme.com":
-        sheetUrl = "https://docs.google.com/spreadsheets/d/1nr6-JDyNELgiwFPp8jr3peVN5nMvRgfFjoLEk3_PUM8/edit?gid=511352855#gid=511352855";
-        break;
-      default:
-        alert("Your email is not authorized to create PO.");
-        return;
+    const apiUrl = "https://script.google.com/macros/s/AKfycbzXVEsecuPGoECZW4LOkn-zvIAZ6M6rJ4a6vuX5X-fhY4-DOa2UVFumwkMjN4S_-bKP/exec?email=" + encodeURIComponent(email);
+
+    try {
+      const response = await fetch(apiUrl);
+      const data = await response.json();
+
+      if (data.product_url) {
+        productManagementUrl = data.product_url;
+      }
+      if (data.product_webapp_url) {
+        productManagementWebAppUrl = data.product_webapp_url;
+      }
+    } catch (err) {
+      console.error("Error fetching product_management_url:", err);
     }
-
-    window.open(sheetUrl, "_blank");
   }
-</script> -->
 
-<script>
+  function loadVendors() {
+    showTemporaryMessage("Start the application , please wait", "yellow", "black");
+    fetch("https://inq7qmtb46.execute-api.us-east-1.amazonaws.com/default/BH_PO_tool_zp")
+      .then(res => res.json())
+      .then(response => {
+        const vendorSelect = document.getElementById("vendor");
+        response.forEach(vendor => {
+          const option = document.createElement("option");
+          option.value = vendor.vendor_name;
+          option.textContent = vendor.vendor_name;
+          vendorSelect.appendChild(option);
+        });
+        $('#vendor').select2({ width: '100%' });
+        hideTemporaryMessage();
+      });
+  }
+
   async function openGoogleSheet() {
-    showTemporaryMessage("Redirecting, please wait","yellow","black");
+    showTemporaryMessage("Redirecting, please wait", "yellow", "black");
     const email = localStorage.getItem("user_email");
     if (!email) {
       alert("User not signed in.");
@@ -319,54 +346,6 @@
       console.error("Error fetching sheet URL:", err);
       alert("Failed to fetch sheet URL.");
     }
-  }
-</script>
-
-
-
-<script>
-  const pageSize = 10;
-  let currentPage = 1;
-  let paginatedData = [];
-  let currentMsgDiv = null;
-  let productManagementUrl = "";
-
-
-
-  async function fetchProductManagementUrl() {
-    const email = localStorage.getItem("user_email");
-    if (!email) return;
-
-    const apiUrl = "https://script.google.com/macros/s/AKfycbzXVEsecuPGoECZW4LOkn-zvIAZ6M6rJ4a6vuX5X-fhY4-DOa2UVFumwkMjN4S_-bKP/exec?email=" + encodeURIComponent(email);
-
-    try {
-	  const response = await fetch(apiUrl);
-  	  const data = await response.json();
-
-	  if (data.product_url) {
-	    productManagementUrl = data.product_url;
-	  }
-    } catch (err) {
-	  console.error("Error fetching product_management_url:", err);
-    }
-  }
-
-  
-  function loadVendors() {
-	showTemporaryMessage("Start the application , please wait","yellow","black");
-    fetch("https://inq7qmtb46.execute-api.us-east-1.amazonaws.com/default/BH_PO_tool_zp")
-      .then(res => res.json())
-      .then(response => {
-        const vendorSelect = document.getElementById("vendor");
-        response.forEach(vendor => {
-          const option = document.createElement("option");
-          option.value = vendor.vendor_name;
-          option.textContent = vendor.vendor_name;
-          vendorSelect.appendChild(option);
-        });
-        $('#vendor').select2({ width: '100%' });
-		hideTemporaryMessage();
-      });
   }
 
   async function searchOrders(message = "Querying data...  please wait") {
@@ -408,9 +387,7 @@
       paginatedData = data;
       currentPage = 1;
 
-      // 🔑 加这一行：从用户 email 获取 product management URL
-      await fetchProductManagementUrl();
-
+      await fetchProductManagementUrl(); // 保证每次都更新
       renderTable();
       hideTemporaryMessage();
     } catch (err) {
@@ -419,7 +396,6 @@
       alert("Failed to fetch order data.");
     }
   }
-	
 
   function renderTable() {
     const start = (currentPage - 1) * pageSize;
