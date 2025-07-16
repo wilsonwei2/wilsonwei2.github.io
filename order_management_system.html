@@ -264,7 +264,7 @@
 </script>
 
 
-<script>
+<!-- <script>
   // set different google sheet link for different email account
   function openGoogleSheet() {
     const email = localStorage.getItem("user_email");
@@ -293,7 +293,34 @@
 
     window.open(sheetUrl, "_blank");
   }
+</script> -->
+
+<script>
+  async function openGoogleSheet() {
+    const email = localStorage.getItem("user_email");
+    if (!email) {
+      alert("User not signed in.");
+      return;
+    }
+
+    const apiUrl = "https://script.google.com/macros/s/AKfycbzXVEsecuPGoECZW4LOkn-zvIAZ6M6rJ4a6vuX5X-fhY4-DOa2UVFumwkMjN4S_-bKP/exec?email=" + encodeURIComponent(email);
+
+    try {
+      const response = await fetch(apiUrl);
+      const data = await response.json();
+
+      if (data.po_url) {
+        window.open(data.po_url, "_blank");
+      } else {
+        alert("Your email is not authorized to create PO.");
+      }
+    } catch (err) {
+      console.error("Error fetching sheet URL:", err);
+      alert("Failed to fetch sheet URL.");
+    }
+  }
 </script>
+
 
 
 <script>
