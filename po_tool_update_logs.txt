@@ -1,12 +1,16 @@
+--Version: 2.3.3 [2025-7-16]
+1.Change the Google sheet method of jumping to product management sheet to dynamically obtain the Google sheet URL
+
 --Version: 2.3.2 [2025-7-16]
 1.add pop message when turn to po creation google sheet.
 
 --Version: 2.3.1 [2025-7-16]
-1.Change the Google sheet method of jumping to create a PO to dynamically obtain the Google sheet URL
+1.Change the Google sheet method of jumping to creattion PO to dynamically obtain the Google sheet URL
 
 --Version: 2.3.0 [2025-7-15]
 1.add new column: po_products
 2.set herf link for po_products
+
 --Version: 2.2.1 [2025-7-14]
 1.set new revision google sheet url as backend url of each po_number.
 2.remove the rule of order status judgment.
