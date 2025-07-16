@@ -1,3 +1,6 @@
+--Version: 2.3.1 [2025-7-16]
+1.Change the Google sheet method of jumping to create a PO to dynamically obtain the Google sheet URL
+
 --Version: 2.3.0 [2025-7-15]
 1.add new column: po_products
 2.set herf link for po_products
