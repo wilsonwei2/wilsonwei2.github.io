@@ -330,7 +330,7 @@
   let paginatedData = [];
   let currentMsgDiv = null;
   let productManagementUrl = "";
-
+  let productManagementWebAppUrl  = "";
 
 
   async function fetchProductManagementUrl() {
@@ -346,6 +346,9 @@
 	  if (data.product_url) {
 	    productManagementUrl = data.product_url;
 	  }
+	  if (data.product_webapp_url) {
+    	    productManagementWebAppUrl = data.product_webapp_url;
+    	  }
     } catch (err) {
 	  console.error("Error fetching product_management_url:", err);
     }
@@ -491,25 +494,48 @@
 		  icon.style.marginLeft = "5px";
 		  a.appendChild(icon);
 		  td.appendChild(a);
-        } else if (key === "po_products"){
+        } else if (key === "po_products") {
 	  const a = document.createElement("a");
-	  a.href = productManagementUrl || "#";
+	  a.href = "#";
 	  a.textContent = "product_management";
-	  a.target = "_blank";
-
- 	  a.onclick = function (event) {
-    	if (!productManagementUrl) {
-      		event.preventDefault();
-      		alert("No Product Management Sheet URL found for this user.");
-    	}
-  	  };
-			
+	  a.style.cursor = "pointer";
+	
+	  a.onclick = async function (event) {
+	    event.preventDefault();
+	
+	    const poNumber = row["PO Number"];
+	    const email = localStorage.getItem("user_email");
+	
+	    if (!productManagementUrl || !productManagementWebAppUrl) {
+	      alert("No Product Management Sheet or WebApp URL found.");
+	      return;
+	    }
+	
+	    const renameUrl = `${productManagementWebAppUrl}?po_number=${encodeURIComponent(poNumber)}`;
+	
+	    try {
+	      const res = await fetch(renameUrl);
+	      const result = await res.text();
+	
+	      if (result.toLowerCase().includes("success")) {
+	        window.open(productManagementUrl, "_blank");
+	      } else {
+	        alert("Failed to rename Google Sheet before opening.");
+	      }
+	    } catch (err) {
+	      console.error("Error calling rename WebApp:", err);
+	      alert("Error calling WebApp to rename Sheet.");
+	    }
+	  };
+	
 	  const icon = document.createElement("i");
 	  icon.classList.add("fas", "fa-external-link-alt");
 	  icon.style.marginLeft = "5px";
 	  a.appendChild(icon);
 	
-	  td.appendChild(a);	
+	  td.appendChild(a);
+	}
+
 	} else {
           td.textContent = row[key];
         }
