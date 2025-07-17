@@ -178,11 +178,7 @@
         if (!response.ok) throw new Error("Network error");
         const result = await response.json();
         console.log("Lambda returned:", result); 
-        if (result.body) {
-          return JSON.parse(result.body);
-        } else {
-          throw new Error("No data returned from Lambda");
-        }
+        return result;
       }
 
       function renderPO(data) {
