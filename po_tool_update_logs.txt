@@ -1,6 +1,9 @@
+--Version: 2.4.2 [2025-7-17]
+1. fixed a bug, when open create new po link, the message will always show on the webpage after the po creation google sheet has been opened
 
 --Version: 2.4.1 [2025-7-17]
 1. fixed a bug that the pop message will end prematurely before the vendor list was loaded
+
 --Version: 2.4.0 [2025-7-17]
 1. add download icon in the po_number list
 
