@@ -197,7 +197,7 @@
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
             <h2 style="margin: 0 auto; font-size: 3rem;">Purchase Order Management</h2>
             <div style="text-align: right; font-size: 14px;">
-                <span style="color: #007BFF;">V: 2.4.1</span><br />
+                <span style="color: #007BFF;">V: 2.4.2</span><br />
                 <a href="https://wilsonwei2.github.io/po_tool_update_logs.txt" target="_blank"
                     style="color: #007BFF; text-decoration: underline;">Update_logs</a>
             </div>
@@ -366,6 +366,7 @@
             const email = localStorage.getItem("user_email");
             if (!email) {
                 alert("User not signed in.");
+                hideTemporaryMessage();
                 return;
             }
 
@@ -376,13 +377,16 @@
                 const data = await response.json();
 
                 if (data.po_url) {
+                    hideTemporaryMessage();
                     window.open(data.po_url, "_blank");
                 } else {
                     alert("Your email is not authorized to create PO.");
+                    hideTemporaryMessage();
                 }
             } catch (err) {
                 console.error("Error fetching sheet URL:", err);
                 alert("Failed to fetch sheet URL.");
+                hideTemporaryMessage();
             }
         }
 
