@@ -251,15 +251,28 @@
           alert("Missing PO number in URL.");
           return;
         }
-
+      
         try {
           const data = await fetchPOData(po);
           renderPO(data);
+      
+          // ✅ 等数据渲染完后检查 autoDownload 参数
+          const urlParams = new URLSearchParams(window.location.search);
+          const shouldAutoDownload = urlParams.get("autoDownload") === "true";
+      
+          if (shouldAutoDownload) {
+            // ✅ 等待一点时间确保 DOM 渲染完成，再执行打印
+            setTimeout(() => {
+              window.print();
+            }, 1000); // 你可以根据页面复杂度加大时间（例如 1500ms）
+          }
+      
         } catch (err) {
           alert("Failed to load PO data: " + err.message);
           console.error(err);
         }
       };
+
     </script>
   </body>
 </html>
