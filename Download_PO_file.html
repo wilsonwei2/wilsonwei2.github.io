@@ -176,7 +176,12 @@
         const url = `https://mfzjmsp5kk.execute-api.us-east-1.amazonaws.com/default/BH_PO_tool_zp?po=${encodeURIComponent(poNumber)}`;
         const response = await fetch(url);
         if (!response.ok) throw new Error("Network error");
-        return response.json();
+        const result = await response.json();
+        if (result.body) {
+          return JSON.parse(result.body);
+        } else {
+          throw new Error("No data returned from Lambda");
+        }
       }
 
       function renderPO(data) {
