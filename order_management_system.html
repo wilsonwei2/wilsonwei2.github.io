@@ -197,7 +197,7 @@
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
             <h2 style="margin: 0 auto; font-size: 3rem;">Purchase Order Management</h2>
             <div style="text-align: right; font-size: 14px;">
-                <span style="color: #007BFF;">V: 2.4.0</span><br />
+                <span style="color: #007BFF;">V: 2.4.1</span><br />
                 <a href="https://wilsonwei2.github.io/po_tool_update_logs.txt" target="_blank"
                     style="color: #007BFF; text-decoration: underline;">Update_logs</a>
             </div>
@@ -303,7 +303,7 @@
 
             try {
                 await fetchProductManagementUrl();
-                loadVendors();
+                await loadVendors();
             } catch (err) {
                 console.error("Initialization failed:", err);
                 alert("Error during page initialization.");
@@ -338,22 +338,28 @@
             }
         }
 
-        function loadVendors() {
-            showTemporaryMessage("Start the application , please wait", "yellow", "black");
-            fetch("https://inq7qmtb46.execute-api.us-east-1.amazonaws.com/default/BH_PO_tool_zp")
-                .then(res => res.json())
-                .then(response => {
-                    const vendorSelect = document.getElementById("vendor");
-                    response.forEach(vendor => {
-                        const option = document.createElement("option");
-                        option.value = vendor.vendor_name;
-                        option.textContent = vendor.vendor_name;
-                        vendorSelect.appendChild(option);
-                    });
-                    $('#vendor').select2({ width: '100%' });
-                    hideTemporaryMessage();
+        async function loadVendors() {
+            showTemporaryMessage("Start the application, please wait", "yellow", "black");
+            try {
+                const res = await fetch("https://inq7qmtb46.execute-api.us-east-1.amazonaws.com/default/BH_PO_tool_zp");
+                const response = await res.json();
+        
+                const vendorSelect = document.getElementById("vendor");
+                response.forEach(vendor => {
+                    const option = document.createElement("option");
+                    option.value = vendor.vendor_name;
+                    option.textContent = vendor.vendor_name;
+                    vendorSelect.appendChild(option);
                 });
+                $('#vendor').select2({ width: '100%' });
+            } catch (err) {
+                console.error("Error loading vendors:", err);
+                alert("Failed to load vendors.");
+            } finally {
+                hideTemporaryMessage();
+            }
         }
+
 
         async function openGoogleSheet() {
             showTemporaryMessage("Redirecting, please wait", "yellow", "black");
@@ -647,9 +653,9 @@
                 });
         }
 
-        window.onload = function () {
-            loadVendors();
-        };
+        // window.onload = function () {
+        //     loadVendors();
+        // };
 
         function showTemporaryMessage(message, background_color, font_color) {
             if (currentMsgDiv) {
