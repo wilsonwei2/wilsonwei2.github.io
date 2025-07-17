@@ -481,6 +481,24 @@
 
                     // ✅ PO Number 列
                     if (key === "PO Number") {
+                        const tdContent = document.createElement("div");
+                        tdContent.style.display = "flex";
+                        tdContent.style.alignItems = "center";
+                        tdContent.style.gap = "8px";
+
+                        // 📥 下载图标
+                        const downloadIcon = document.createElement("i");
+                        downloadIcon.classList.add("fas", "fa-download");
+                        downloadIcon.style.cursor = "pointer";
+                        downloadIcon.title = "Download PO File";
+
+                        downloadIcon.onclick = function () {
+                            const poNumber = row["PO Number"];
+                            const downloadUrl = `https://wilsonwei2.github.io/Download_PO_file.html?po=${encodeURIComponent(poNumber)}`;
+                            window.open(downloadUrl, "_blank");
+                        };
+
+                        // 🔗 PO Number 链接
                         const a = document.createElement("a");
                         const sheetUrl = row["ORDER_REVIEW_GOOGLE_SHEET_URL"];
 
@@ -500,7 +518,9 @@
                         icon.style.marginLeft = "5px";
                         a.appendChild(icon);
 
-                        td.appendChild(a);
+                        tdContent.appendChild(downloadIcon);
+                        tdContent.appendChild(a);
+                        td.appendChild(tdContent);
                     }
 
                     // ✅ product_management 列
