@@ -1,3 +1,6 @@
+--Version: 2.4.0 [2025-7-17]
+1. add download icon in the po_number list
+
 --Version: 2.3.4 [2025-7-16]
 1.turn to different product management webapp url based on email
 
