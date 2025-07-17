@@ -449,9 +449,29 @@
 	
 	      // ✅ PO Number 列
 	      if (key === "PO Number") {
+		const td = document.createElement("td");
+		// 包装容器
+		const container = document.createElement("div");
+		container.style.display = "flex";
+		container.style.alignItems = "center";
+		container.style.gap = "6px";
+		// 下载图标按钮
+		const downloadIcon = document.createElement("i");
+		downloadIcon.classList.add("fas", "fa-file-download");
+		downloadIcon.style.cursor = "pointer";
+		downloadIcon.style.color = "#007bff";
+		downloadIcon.title = "下载 PDF";
+		downloadIcon.onclick = () => {
+		  const confirmDownload = confirm(`Whether to download PO file：${row[key]}？`);
+		  if (confirmDownload) {
+		    const poNumber = row[key];
+		    const downloadUrl = `https://yourdomain.com/po.html?po=${encodeURIComponent(poNumber)}`;
+		    window.open(downloadUrl, '_blank');  
+		  }
+		};
+   
 	        const a = document.createElement("a");
 	        const sheetUrl = row["ORDER_REVIEW_GOOGLE_SHEET_URL"];
-	
 	        a.href = sheetUrl || "#";
 	        a.textContent = row[key];
 	        a.target = "_blank";
@@ -463,12 +483,13 @@
 	          }
 	        };
 	
-	        const icon = document.createElement("i");
-	        icon.classList.add("fas", "fa-external-link-alt");
-	        icon.style.marginLeft = "5px";
+	        const linkIcon  = document.createElement("i");
+	        linkIcon .classList.add("fas", "fa-external-link-alt");
+	        linkIcon .style.marginLeft = "5px";
 	        a.appendChild(icon);
-	
-	        td.appendChild(a);
+		container.appendChild(downloadIcon); // 👈 下载图标
+		container.appendChild(a);            // 👈 原始链接
+	        td.appendChild(container);
 	      }
 	
 	      // ✅ product_management 列
