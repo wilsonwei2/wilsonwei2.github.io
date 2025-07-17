@@ -1,680 +1,692 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Purchase Order Management</title>
-  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 2rem;
-      background-color: #f9f9f9;
-    }
-    .container {
-      max-width: 1400px;
-      margin: auto;
-      background-color: white;
-      padding: 2rem;
-      border-radius: 10px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    }
-    h2 {
-      text-align: center;
-      font-size: 3rem;
-    }
-    .form-row {
-      display: flex;
-      flex-wrap: nowrap;
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-      align-items: flex-end;
-    }
-	.form-row2 {
-	  max-width: 250px;
-	  width: 100%;
-	}
-    .form-group {
-      flex: 1;
-      min-width: 200px;
-      display: flex;
-      flex-direction: column;
-    }
-    input, select {
-      padding: 0.5rem;
-      height: 42px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      font-size: 1rem;
-      width: 100%;
-      box-sizing: border-box;
-    }
-    .select2-container .select2-selection--single {
-      height: 42px;
-    }
-    .select2-selection__rendered {
-      line-height: 42px !important;
-    }
-    .select2-selection__arrow {
-      height: 42px !important;
-    }
-    .button-group {
-      display: flex;
-      gap: 1rem;
-      justify-content: flex-start;
-      align-items: flex-end;
-    }
-    button {
-      padding: 0.5rem 1rem;
-      height: 42px;
-      font-size: 1rem;
-      border-radius: 6px;
-      background-color: #2563eb;
-      color: white;
-      border: none;
-      cursor: pointer;
-      min-width: 120px;
-    }
-    button:hover {
-      background-color: #1e40af;
-    }
-    a {
-      text-decoration: underline;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 1rem;
-    }
-    th, td {
-      padding: 0.75rem;
-      border-bottom: 1px solid #ddd;
-      text-align: left;
-    }
-    th {
-      background-color: #f1f5f9;
-    }
-    .pagination {
-      margin-top: 1rem;
-      display: flex;
-      justify-content: center;
-      gap: 0.5rem;
-    }
-    .pagination button {
-      padding: 0.5rem 1rem;
-    }
-    .draft-row {
-      color: green;
-      font-weight: bold;
-    }
-    .action-buttons {
-      display: none;
-      margin-top: 2rem;
-      justify-content: center;
-      gap: 1rem;
-    }
-	#tableBody input[type="checkbox"] {
-      transform: scale(0.5);
-	  margin-right: 10px;
-    }
-	.date-filter-row {
-	  display: flex;
-	  gap: 1rem;
-	  margin-bottom: 1.5rem;
-	  align-items: flex-end;
-	  justify-content: flex-start;
-	}
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Purchase Order Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 2rem;
+            background-color: #f9f9f9;
+        }
 
-	.fixed-width {
-	  width: 220px !important;
-	  flex: 0 0 auto !important;  /* 阻止 flex:1 扩展 */
-	}
-	.user-info {
-      text-align: right;
-      font-size: 14px;
-      margin-bottom: 10px;
-    }
-	.logout {
-		text-align: right;
-		margin-top: 5px;
-		margin-bottom: 20px;
-	}
-	.logout button {
-		background-color: #ff4d4d;
-		color: white;
-		border: none;
-		padding: 4px 8px;
-		font-size: 13px;
-		cursor: pointer;
-		border-radius: 4px;
-	}
-	.logout button:hover {
-		background-color: #cc0000;
-	}
-  </style>
+        .container {
+            max-width: 1400px;
+            margin: auto;
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 3rem;
+        }
+
+        .form-row {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            align-items: flex-end;
+        }
+
+        .form-row2 {
+            max-width: 250px;
+            width: 100%;
+        }
+
+        .form-group {
+            flex: 1;
+            min-width: 200px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        input,
+        select {
+            padding: 0.5rem;
+            height: 42px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 1rem;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .select2-container .select2-selection--single {
+            height: 42px;
+        }
+
+        .select2-selection__rendered {
+            line-height: 42px !important;
+        }
+
+        .select2-selection__arrow {
+            height: 42px !important;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-start;
+            align-items: flex-end;
+        }
+
+        button {
+            padding: 0.5rem 1rem;
+            height: 42px;
+            font-size: 1rem;
+            border-radius: 6px;
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            cursor: pointer;
+            min-width: 120px;
+        }
+
+        button:hover {
+            background-color: #1e40af;
+        }
+
+        a {
+            text-decoration: underline;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        th,
+        td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f1f5f9;
+        }
+
+        .pagination {
+            margin-top: 1rem;
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .pagination button {
+            padding: 0.5rem 1rem;
+        }
+
+        .draft-row {
+            color: green;
+            font-weight: bold;
+        }
+
+        .action-buttons {
+            display: none;
+            margin-top: 2rem;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        #tableBody input[type="checkbox"] {
+            transform: scale(0.5);
+            margin-right: 10px;
+        }
+
+        .date-filter-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            align-items: flex-end;
+            justify-content: flex-start;
+        }
+
+        .fixed-width {
+            width: 220px !important;
+            flex: 0 0 auto !important;
+            /* 阻止 flex:1 扩展 */
+        }
+
+        .user-info {
+            text-align: right;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .logout {
+            text-align: right;
+            margin-top: 5px;
+            margin-bottom: 20px;
+        }
+
+        .logout button {
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            font-size: 13px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .logout button:hover {
+            background-color: #cc0000;
+        }
+    </style>
 </head>
+
 <body>
-<div class="user-info">
-    Logged in as: <span id="userEmail"></span>
-</div>
-<div class="logout">
-    <button onclick="logout()">Logout</button>
-</div>
-  
-<div class="container">
-  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-  <h2 style="margin: 0 auto; font-size: 3rem;">Purchase Order Management</h2>
-  <div style="text-align: right; font-size: 14px;">
-    <span style="color: #007BFF;">V: 2.4.0</span><br/>
-    <a href="https://wilsonwei2.github.io/po_tool_update_logs.txt" target="_blank" style="color: #007BFF; text-decoration: underline;">Update_logs</a>
-  </div>
-  </div>
-
-
-  <div class="form-row">
-    <div class="form-group">
-      <label for="poNumber">PO Number</label>
-      <input type="text" id="poNumber"/>
+    <div class="user-info">
+        Logged in as: <span id="userEmail"></span>
     </div>
-    <div class="form-group">
-      <label for="vendor">Vendor</label>
-      <select id="vendor">
-        <option value="">--Select Vendor--</option>
-      </select>
+    <div class="logout">
+        <button onclick="logout()">Logout</button>
     </div>
-    <div class="form-group">
-      <label for="order_status">Order Status</label>
-      <select id="order_status">
-        <option value="">--Select Status--</option>
-        <option value="draft">Draft</option>
-        <option value="submitted">Submitted</option>
-		<option value="rejected">Rejected</option>
-        <option value="canceled">Canceled</option>
-        <option value="closed">Closed</option>
-      </select>
+
+    <div class="container">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+            <h2 style="margin: 0 auto; font-size: 3rem;">Purchase Order Management</h2>
+            <div style="text-align: right; font-size: 14px;">
+                <span style="color: #007BFF;">V: 2.4.0</span><br />
+                <a href="https://wilsonwei2.github.io/po_tool_update_logs.txt" target="_blank"
+                    style="color: #007BFF; text-decoration: underline;">Update_logs</a>
+            </div>
+        </div>
+
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="poNumber">PO Number</label>
+                <input type="text" id="poNumber" />
+            </div>
+            <div class="form-group">
+                <label for="vendor">Vendor</label>
+                <select id="vendor">
+                    <option value="">--Select Vendor--</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="order_status">Order Status</label>
+                <select id="order_status">
+                    <option value="">--Select Status--</option>
+                    <option value="draft">Draft</option>
+                    <option value="submitted">Submitted</option>
+                    <option value="rejected">Rejected</option>
+                    <option value="canceled">Canceled</option>
+                    <option value="closed">Closed</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="ItemName">Item Name</label>
+                <input type="text" id="ItemName" />
+            </div>
+            <div class="form-group">
+                <label for="buyer">Buyer</label>
+                <input type="text" id="buyer" />
+            </div>
+        </div>
+        <div class="date-filter-row">
+            <div class="form-group fixed-width">
+                <label for="startDate">Start Date(Created Date)</label>
+                <input type="date" id="startDate" />
+            </div>
+            <div class="form-group fixed-width">
+                <label for="endDate">End Date(Created Date)</label>
+                <input type="date" id="endDate" />
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="button-group" style="width: 100%;">
+                <div style="display: flex; gap: 1rem;">
+                    <button onclick="searchOrders()">Search</button>
+                    <button onclick="clearResults()">Clear</button>
+                    <button onclick="openGoogleSheet()">Create New PO</button>
+                </div>
+                <div style="margin-left: auto;">
+                    <button onclick="downloadCSV()">Export Search Results</button>
+                </div>
+            </div>
+
+        </div>
+
+        <table id="resultsTable">
+            <thead>
+                <tr id="tableHeaders"></tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+        </table>
+
+        <div class="pagination" id="pagination"></div>
+
+        <div class="action-buttons" id="actionButtons">
+            <button onclick="sendBulkAction('submitted')">Submit</button>
+            <button onclick="sendBulkAction('canceled')">Cancel</button>
+            <button onclick="sendBulkAction('closed')">Close</button>
+        </div>
     </div>
-	<div class="form-group">
-      <label for="ItemName">Item Name</label>
-      <input type="text" id="ItemName"/>
-    </div>
-	<div class="form-group">
-    <label for="buyer">Buyer</label>
-    <input type="text" id="buyer"/>
-	</div>
-  </div>
-  <div class="date-filter-row">
-    <div class="form-group fixed-width">
-      <label for="startDate">Start Date(Created Date)</label>
-      <input type="date" id="startDate"/>
-    </div>
-    <div class="form-group fixed-width">
-      <label for="endDate">End Date(Created Date)</label>
-      <input type="date" id="endDate"/>
-    </div>
-  </div>
 
-  <div class="form-row">
-    <div class="button-group" style="width: 100%;">
-	  <div style="display: flex; gap: 1rem;">
-		<button onclick="searchOrders()">Search</button>
-		<button onclick="clearResults()">Clear</button>
-		<button onclick="openGoogleSheet()">Create New PO</button>
-	  </div>
-	  <div style="margin-left: auto;">
-		<button onclick="downloadCSV()">Export Search Results</button>
-	  </div>
-	</div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
-  </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
-  <table id="resultsTable">
-    <thead>
-      <tr id="tableHeaders"></tr>
-    </thead>
-    <tbody id="tableBody"></tbody>
-  </table>
+    <script>
+        const pageSize = 10;
+        let currentPage = 1;
+        let paginatedData = [];
+        let currentMsgDiv = null;
+        let productManagementUrl = "";
+        let productManagementWebAppUrl = "";
 
-  <div class="pagination" id="pagination"></div>
+        document.addEventListener("DOMContentLoaded", async function () {
+            const email = localStorage.getItem("user_email");
+            if (!email) {
+                window.location.href = "https://wilsonwei2.github.io/Tool_login.html";
+                return;
+            } else {
+                document.getElementById("userEmail").textContent = email;
+            }
 
-  <div class="action-buttons" id="actionButtons">
-    <button onclick="sendBulkAction('submitted')">Submit</button>
-    <button onclick="sendBulkAction('canceled')">Cancel</button>
-    <button onclick="sendBulkAction('closed')">Close</button>
-  </div>
-</div>
+            showTemporaryMessage("Loading... please wait", "yellow", "black");
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+            try {
+                await fetchProductManagementUrl();
+                loadVendors();
+            } catch (err) {
+                console.error("Initialization failed:", err);
+                alert("Error during page initialization.");
+            }
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
-<script>
-  const pageSize = 10;
-  let currentPage = 1;
-  let paginatedData = [];
-  let currentMsgDiv = null;
-  let productManagementUrl = "";
-  let productManagementWebAppUrl = "";
-
-  document.addEventListener("DOMContentLoaded", async function () {
-    const email = localStorage.getItem("user_email");
-    if (!email) {
-      window.location.href = "https://wilsonwei2.github.io/Tool_login.html";
-      return;
-    } else {
-      document.getElementById("userEmail").textContent = email;
-    }
-
-    showTemporaryMessage("Loading... please wait", "yellow", "black");
-
-    try {
-      await fetchProductManagementUrl();
-      loadVendors();
-    } catch (err) {
-      console.error("Initialization failed:", err);
-      alert("Error during page initialization.");
-    }
-
-    hideTemporaryMessage();
-  });
-
-  function logout() {
-    localStorage.removeItem("user_email");
-    window.location.href = "https://wilsonwei2.github.io/Tool_login.html";
-  }
-
-  async function fetchProductManagementUrl() {
-    const email = localStorage.getItem("user_email");
-    if (!email) return;
-
-    const apiUrl = "https://script.google.com/macros/s/AKfycbzXVEsecuPGoECZW4LOkn-zvIAZ6M6rJ4a6vuX5X-fhY4-DOa2UVFumwkMjN4S_-bKP/exec?email=" + encodeURIComponent(email);
-
-    try {
-      const response = await fetch(apiUrl);
-      const data = await response.json();
-
-      if (data.product_url) {
-        productManagementUrl = data.product_url;
-      }
-      if (data.product_webapp_url) {
-        productManagementWebAppUrl = data.product_webapp_url;
-      }
-    } catch (err) {
-      console.error("Error fetching product_management_url:", err);
-    }
-  }
-
-  function loadVendors() {
-    showTemporaryMessage("Start the application , please wait", "yellow", "black");
-    fetch("https://inq7qmtb46.execute-api.us-east-1.amazonaws.com/default/BH_PO_tool_zp")
-      .then(res => res.json())
-      .then(response => {
-        const vendorSelect = document.getElementById("vendor");
-        response.forEach(vendor => {
-          const option = document.createElement("option");
-          option.value = vendor.vendor_name;
-          option.textContent = vendor.vendor_name;
-          vendorSelect.appendChild(option);
+            hideTemporaryMessage();
         });
-        $('#vendor').select2({ width: '100%' });
-        hideTemporaryMessage();
-      });
-  }
 
-  async function openGoogleSheet() {
-    showTemporaryMessage("Redirecting, please wait", "yellow", "black");
-    const email = localStorage.getItem("user_email");
-    if (!email) {
-      alert("User not signed in.");
-      return;
-    }
+        function logout() {
+            localStorage.removeItem("user_email");
+            window.location.href = "https://wilsonwei2.github.io/Tool_login.html";
+        }
 
-    const apiUrl = "https://script.google.com/macros/s/AKfycbzXVEsecuPGoECZW4LOkn-zvIAZ6M6rJ4a6vuX5X-fhY4-DOa2UVFumwkMjN4S_-bKP/exec?email=" + encodeURIComponent(email);
+        async function fetchProductManagementUrl() {
+            const email = localStorage.getItem("user_email");
+            if (!email) return;
 
-    try {
-      const response = await fetch(apiUrl);
-      const data = await response.json();
+            const apiUrl = "https://script.google.com/macros/s/AKfycbzXVEsecuPGoECZW4LOkn-zvIAZ6M6rJ4a6vuX5X-fhY4-DOa2UVFumwkMjN4S_-bKP/exec?email=" + encodeURIComponent(email);
 
-      if (data.po_url) {
-        window.open(data.po_url, "_blank");
-      } else {
-        alert("Your email is not authorized to create PO.");
-      }
-    } catch (err) {
-      console.error("Error fetching sheet URL:", err);
-      alert("Failed to fetch sheet URL.");
-    }
-  }
+            try {
+                const response = await fetch(apiUrl);
+                const data = await response.json();
 
-  async function searchOrders(message = "Querying data...  please wait") {
-    const poNumber = document.getElementById("poNumber").value.trim();
-    const vendor = document.getElementById("vendor").value.trim();
-    const order_status = document.getElementById("order_status").value.trim();
-    const startDate = document.getElementById("startDate").value;
-    const endDate = document.getElementById("endDate").value;
-    const itemname = document.getElementById("ItemName").value;
-    const buyer = document.getElementById("buyer").value;
+                if (data.product_url) {
+                    productManagementUrl = data.product_url;
+                }
+                if (data.product_webapp_url) {
+                    productManagementWebAppUrl = data.product_webapp_url;
+                }
+            } catch (err) {
+                console.error("Error fetching product_management_url:", err);
+            }
+        }
 
-    if (!poNumber && !vendor && !startDate && !endDate && !order_status && !itemname && !buyer) {
-      alert("Please enter at least one search condition.");
-      return;
-    }
+        function loadVendors() {
+            showTemporaryMessage("Start the application , please wait", "yellow", "black");
+            fetch("https://inq7qmtb46.execute-api.us-east-1.amazonaws.com/default/BH_PO_tool_zp")
+                .then(res => res.json())
+                .then(response => {
+                    const vendorSelect = document.getElementById("vendor");
+                    response.forEach(vendor => {
+                        const option = document.createElement("option");
+                        option.value = vendor.vendor_name;
+                        option.textContent = vendor.vendor_name;
+                        vendorSelect.appendChild(option);
+                    });
+                    $('#vendor').select2({ width: '100%' });
+                    hideTemporaryMessage();
+                });
+        }
 
-    showTemporaryMessage(message, "yellow", "black");
+        async function openGoogleSheet() {
+            showTemporaryMessage("Redirecting, please wait", "yellow", "black");
+            const email = localStorage.getItem("user_email");
+            if (!email) {
+                alert("User not signed in.");
+                return;
+            }
 
-    const params = {
-      ...(poNumber && { po_number: poNumber }),
-      ...(vendor && { vendor }),
-      ...(order_status && { order_status }),
-      ...(itemname && { Item_Name: itemname }),
-      ...(buyer && { buyer: buyer }),
-      ...(startDate && { start_date: startDate }),
-      ...(endDate && { end_date: endDate })
-    };
+            const apiUrl = "https://script.google.com/macros/s/AKfycbzXVEsecuPGoECZW4LOkn-zvIAZ6M6rJ4a6vuX5X-fhY4-DOa2UVFumwkMjN4S_-bKP/exec?email=" + encodeURIComponent(email);
 
-    try {
-      const res = await fetch("https://k0iwtzc8if.execute-api.us-east-1.amazonaws.com/default/BH_query_purchase_orders_to_webpage_zp", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(params)
-      });
+            try {
+                const response = await fetch(apiUrl);
+                const data = await response.json();
 
-      const data = await res.json();
-      paginatedData = data;
-      currentPage = 1;
+                if (data.po_url) {
+                    window.open(data.po_url, "_blank");
+                } else {
+                    alert("Your email is not authorized to create PO.");
+                }
+            } catch (err) {
+                console.error("Error fetching sheet URL:", err);
+                alert("Failed to fetch sheet URL.");
+            }
+        }
 
-      await fetchProductManagementUrl(); // 保证每次都更新
-      renderTable();
-      hideTemporaryMessage();
-    } catch (err) {
-      console.error("Error during search:", err);
-      hideTemporaryMessage();
-      alert("Failed to fetch order data.");
-    }
-  }
+        async function searchOrders(message = "Querying data...  please wait") {
+            const poNumber = document.getElementById("poNumber").value.trim();
+            const vendor = document.getElementById("vendor").value.trim();
+            const order_status = document.getElementById("order_status").value.trim();
+            const startDate = document.getElementById("startDate").value;
+            const endDate = document.getElementById("endDate").value;
+            const itemname = document.getElementById("ItemName").value;
+            const buyer = document.getElementById("buyer").value;
 
-	function renderTable() {
-	  const start = (currentPage - 1) * pageSize;
-	  const end = start + pageSize;
-	  const currentData = paginatedData.slice(start, end);
-	
-	  const tableHeaders = document.getElementById("tableHeaders");
-	  const tableBody = document.getElementById("tableBody");
-	  tableHeaders.innerHTML = "";
-	  tableBody.innerHTML = "";
-	
-	  if (currentData.length === 0) {
-	    tableHeaders.innerHTML = "<th>No data</th>";
-	    return;
-	  }
-	
-	  const headers = Object.keys(currentData[0]).filter(h => h !== "ORDER_REVIEW_GOOGLE_SHEET_URL");
-	  headers.splice(1, 0, "po_products");
-	  const fullHeaders = ["Select", ...headers];
-	
-	  fullHeaders.forEach(header => {
-	    const th = document.createElement("th");
-	    th.textContent = header;
-	    tableHeaders.appendChild(th);
-	  });
-	
-	  currentData.forEach(row => {
-	    const tr = document.createElement("tr");
-	    if (row["PO Status"] && row["PO Status"].toLowerCase() === "draft") {
-	      tr.classList.add("draft-row");
-	    }
-	
-	    // ✅ 选择框列
-	    const checkboxTd = document.createElement("td");
-	    const checkbox = document.createElement("input");
-	    checkbox.type = "checkbox";
-	    checkbox.classList.add("row-select");
-	    checkbox.value = row["PO Number"];
-	
-	    const status = row["PO Status"]?.toLowerCase();
-	    if (status === "canceled" || status === "closed") {
-	      checkbox.disabled = true;
-	    }
-	
-	    checkbox.addEventListener("change", toggleActionButtons);
-	    checkboxTd.appendChild(checkbox);
-	    tr.appendChild(checkboxTd);
-	
-	    headers.forEach(key => {
-	      const td = document.createElement("td");
-	
-	      // ✅ PO Number 列
-	      if (key === "PO Number") {
-		const td = document.createElement("td");
-		// 包装容器
-		const container = document.createElement("div");
-		container.style.display = "flex";
-		container.style.alignItems = "center";
-		container.style.gap = "6px";
-		// 下载图标按钮
-		const downloadIcon = document.createElement("i");
-		downloadIcon.classList.add("fas", "fa-file-download");
-		downloadIcon.style.cursor = "pointer";
-		downloadIcon.style.color = "#007bff";
-		downloadIcon.title = "下载 PDF";
-		downloadIcon.onclick = () => {
-		  const confirmDownload = confirm(`Whether to download PO file：${row[key]}？`);
-		  if (confirmDownload) {
-		    const poNumber = row[key];
-		    const downloadUrl = `https://wilsonwei2.github.io/Download_PO_file.html?po=${encodeURIComponent(poNumber)}`;
-		    window.open(downloadUrl, '_blank');  
-		  }
-		};
-   
-	        const a = document.createElement("a");
-	        const sheetUrl = row["ORDER_REVIEW_GOOGLE_SHEET_URL"];
-	        a.href = sheetUrl || "#";
-	        a.textContent = row[key];
-	        a.target = "_blank";
-	
-	        a.onclick = function (event) {
-	          if (!sheetUrl || sheetUrl === "#") {
-	            event.preventDefault();
-	            alert("No Google Sheet URL found for this PO.");
-	          }
-	        };
-	
-	        const linkIcon  = document.createElement("i");
-	        linkIcon .classList.add("fas", "fa-external-link-alt");
-	        linkIcon .style.marginLeft = "5px";
-	        a.appendChild(icon);
-		container.appendChild(downloadIcon); // 👈 下载图标
-		container.appendChild(a);            // 👈 原始链接
-	        td.appendChild(container);
-	      }
-	
-	      // ✅ product_management 列
-	      else if (key === "po_products") {
-	        const a = document.createElement("a");
-	        a.href = "#";
-	        a.textContent = "product_management";
-	        a.style.cursor = "pointer";
-	
-	        a.onclick = async function (event) {
-	          event.preventDefault();
-	
-	          const poNumber = row["PO Number"];
-	          const email = localStorage.getItem("user_email");
-	
-	          if (!productManagementUrl || !productManagementWebAppUrl) {
-	            alert("No Product Management Sheet or WebApp URL found.");
-	            return;
-	          }
-			
-		  showTemporaryMessage(`Opening sheet for PO: ${poNumber} ...`, "yellow", "black");
-			
-	          // 👇 拼接 WebApp URL，发送 po_number
-	          const renameUrl = `${productManagementWebAppUrl}?po_number=${encodeURIComponent(poNumber)}`;
-	
-	          try {
-	            const res = await fetch(renameUrl);
-	            const result = await res.text();
-	
-	            if (result.toLowerCase().includes("success") || result.toLowerCase().includes("ok")) {
-	              window.open(productManagementUrl, "_blank");
-	            } else {
-	              alert("Failed to rename Google Sheet before opening.");
-	            }
-	          } catch (err) {
-	            console.error("Error calling rename WebApp:", err);
-	            alert("Error calling WebApp to rename Sheet.");
-	          } finally{
-		    hideTemporaryMessage(); 
-		  }
-	        };
-	
-	        const icon = document.createElement("i");
-	        icon.classList.add("fas", "fa-external-link-alt");
-	        icon.style.marginLeft = "5px";
-	        a.appendChild(icon);
-	
-	        td.appendChild(a);
-	      }
-	
-	      // ✅ 其他字段正常显示
-	      else {
-	        td.textContent = row[key];
-	      }
-	
-	      tr.appendChild(td);
-	    });
-	
-	    tableBody.appendChild(tr);
-	  });
-	
-	  renderPagination();
-	  toggleActionButtons();
-	}
+            if (!poNumber && !vendor && !startDate && !endDate && !order_status && !itemname && !buyer) {
+                alert("Please enter at least one search condition.");
+                return;
+            }
+
+            showTemporaryMessage(message, "yellow", "black");
+
+            const params = {
+                ...(poNumber && { po_number: poNumber }),
+                ...(vendor && { vendor }),
+                ...(order_status && { order_status }),
+                ...(itemname && { Item_Name: itemname }),
+                ...(buyer && { buyer: buyer }),
+                ...(startDate && { start_date: startDate }),
+                ...(endDate && { end_date: endDate })
+            };
+
+            try {
+                const res = await fetch("https://k0iwtzc8if.execute-api.us-east-1.amazonaws.com/default/BH_query_purchase_orders_to_webpage_zp", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(params)
+                });
+
+                const data = await res.json();
+                paginatedData = data;
+                currentPage = 1;
+
+                await fetchProductManagementUrl(); // 保证每次都更新
+                renderTable();
+                hideTemporaryMessage();
+            } catch (err) {
+                console.error("Error during search:", err);
+                hideTemporaryMessage();
+                alert("Failed to fetch order data.");
+            }
+        }
+
+        function renderTable() {
+            const start = (currentPage - 1) * pageSize;
+            const end = start + pageSize;
+            const currentData = paginatedData.slice(start, end);
+
+            const tableHeaders = document.getElementById("tableHeaders");
+            const tableBody = document.getElementById("tableBody");
+            tableHeaders.innerHTML = "";
+            tableBody.innerHTML = "";
+
+            if (currentData.length === 0) {
+                tableHeaders.innerHTML = "<th>No data</th>";
+                return;
+            }
+
+            const headers = Object.keys(currentData[0]).filter(h => h !== "ORDER_REVIEW_GOOGLE_SHEET_URL");
+            headers.splice(1, 0, "po_products");
+            const fullHeaders = ["Select", ...headers];
+
+            fullHeaders.forEach(header => {
+                const th = document.createElement("th");
+                th.textContent = header;
+                tableHeaders.appendChild(th);
+            });
+
+            currentData.forEach(row => {
+                const tr = document.createElement("tr");
+                if (row["PO Status"] && row["PO Status"].toLowerCase() === "draft") {
+                    tr.classList.add("draft-row");
+                }
+
+                // ✅ 选择框列
+                const checkboxTd = document.createElement("td");
+                const checkbox = document.createElement("input");
+                checkbox.type = "checkbox";
+                checkbox.classList.add("row-select");
+                checkbox.value = row["PO Number"];
+
+                const status = row["PO Status"]?.toLowerCase();
+                if (status === "canceled" || status === "closed") {
+                    checkbox.disabled = true;
+                }
+
+                checkbox.addEventListener("change", toggleActionButtons);
+                checkboxTd.appendChild(checkbox);
+                tr.appendChild(checkboxTd);
+
+                headers.forEach(key => {
+                    const td = document.createElement("td");
+
+                    // ✅ PO Number 列
+                    if (key === "PO Number") {
+                        const a = document.createElement("a");
+                        const sheetUrl = row["ORDER_REVIEW_GOOGLE_SHEET_URL"];
+
+                        a.href = sheetUrl || "#";
+                        a.textContent = row[key];
+                        a.target = "_blank";
+
+                        a.onclick = function (event) {
+                            if (!sheetUrl || sheetUrl === "#") {
+                                event.preventDefault();
+                                alert("No Google Sheet URL found for this PO.");
+                            }
+                        };
+
+                        const icon = document.createElement("i");
+                        icon.classList.add("fas", "fa-external-link-alt");
+                        icon.style.marginLeft = "5px";
+                        a.appendChild(icon);
+
+                        td.appendChild(a);
+                    }
+
+                    // ✅ product_management 列
+                    else if (key === "po_products") {
+                        const a = document.createElement("a");
+                        a.href = "#";
+                        a.textContent = "product_management";
+                        a.style.cursor = "pointer";
+
+                        a.onclick = async function (event) {
+                            event.preventDefault();
+
+                            const poNumber = row["PO Number"];
+                            const email = localStorage.getItem("user_email");
+
+                            if (!productManagementUrl || !productManagementWebAppUrl) {
+                                alert("No Product Management Sheet or WebApp URL found.");
+                                return;
+                            }
+
+                            showTemporaryMessage(`Opening sheet for PO: ${poNumber} ...`, "yellow", "black");
+
+                            // 👇 拼接 WebApp URL，发送 po_number
+                            const renameUrl = `${productManagementWebAppUrl}?po_number=${encodeURIComponent(poNumber)}`;
+
+                            try {
+                                const res = await fetch(renameUrl);
+                                const result = await res.text();
+
+                                if (result.toLowerCase().includes("success") || result.toLowerCase().includes("ok")) {
+                                    window.open(productManagementUrl, "_blank");
+                                } else {
+                                    alert("Failed to rename Google Sheet before opening.");
+                                }
+                            } catch (err) {
+                                console.error("Error calling rename WebApp:", err);
+                                alert("Error calling WebApp to rename Sheet.");
+                            } finally {
+                                hideTemporaryMessage();
+                            }
+                        };
+
+                        const icon = document.createElement("i");
+                        icon.classList.add("fas", "fa-external-link-alt");
+                        icon.style.marginLeft = "5px";
+                        a.appendChild(icon);
+
+                        td.appendChild(a);
+                    }
+
+                    // ✅ 其他字段正常显示
+                    else {
+                        td.textContent = row[key];
+                    }
+
+                    tr.appendChild(td);
+                });
+
+                tableBody.appendChild(tr);
+            });
+
+            renderPagination();
+            toggleActionButtons();
+        }
 
 
-  function renderPagination() {
-    const totalPages = Math.ceil(paginatedData.length / pageSize);
-    const pagination = document.getElementById("pagination");
-    pagination.innerHTML = "";
-    for (let i = 1; i <= totalPages; i++) {
-      const btn = document.createElement("button");
-      btn.textContent = i;
-      if (i === currentPage) btn.style.fontWeight = "bold";
-      btn.onclick = () => {
-        currentPage = i;
-        renderTable();
-      };
-      pagination.appendChild(btn);
-    }
-  }
+        function renderPagination() {
+            const totalPages = Math.ceil(paginatedData.length / pageSize);
+            const pagination = document.getElementById("pagination");
+            pagination.innerHTML = "";
+            for (let i = 1; i <= totalPages; i++) {
+                const btn = document.createElement("button");
+                btn.textContent = i;
+                if (i === currentPage) btn.style.fontWeight = "bold";
+                btn.onclick = () => {
+                    currentPage = i;
+                    renderTable();
+                };
+                pagination.appendChild(btn);
+            }
+        }
 
-  function clearResults() {
-    document.getElementById("poNumber").value = "";
-    $('#vendor').val('').trigger('change');
-    document.getElementById("order_status").value = "";
-	document.getElementById("ItemName").value = "";
-	document.getElementById("buyer").value = "";
-    document.getElementById("startDate").value = "";
-    document.getElementById("endDate").value = "";
-    paginatedData = [];
-    document.getElementById("tableHeaders").innerHTML = "";
-    document.getElementById("tableBody").innerHTML = "";
-    document.getElementById("pagination").innerHTML = "";
-    document.getElementById("actionButtons").style.display = "none";
-  }
+        function clearResults() {
+            document.getElementById("poNumber").value = "";
+            $('#vendor').val('').trigger('change');
+            document.getElementById("order_status").value = "";
+            document.getElementById("ItemName").value = "";
+            document.getElementById("buyer").value = "";
+            document.getElementById("startDate").value = "";
+            document.getElementById("endDate").value = "";
+            paginatedData = [];
+            document.getElementById("tableHeaders").innerHTML = "";
+            document.getElementById("tableBody").innerHTML = "";
+            document.getElementById("pagination").innerHTML = "";
+            document.getElementById("actionButtons").style.display = "none";
+        }
 
-  function toggleActionButtons() {
-    const checkboxes = document.querySelectorAll(".row-select:checked");
-    document.getElementById("actionButtons").style.display = checkboxes.length > 0 ? "flex" : "none";
-  }
+        function toggleActionButtons() {
+            const checkboxes = document.querySelectorAll(".row-select:checked");
+            document.getElementById("actionButtons").style.display = checkboxes.length > 0 ? "flex" : "none";
+        }
 
-  function sendBulkAction(action) {
-  
-    const selectedPOs = Array.from(document.querySelectorAll(".row-select:checked"))
-      .map(cb => cb.value);
-    if (selectedPOs.length === 0) return;
-	
-	showTemporaryMessage("The change request has been submitted, please wait...","yellow","black"); // 新增	
-	
-    fetch("https://nsy7navyr7.execute-api.us-east-1.amazonaws.com/default/BH_PO_tool_zp", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action, po_numbers: selectedPOs })
-    })
-    .then(response => response.json())
-    .then(data => {
-      alert(`Action '${action}' completed: ${JSON.stringify(data)}`);
-      searchOrders("Refreshing Data ... please wait");
-    })
-    .catch(error => {
-      console.error("Error:", error);
-      alert("Failed to perform action.");
-    });
-  }
+        function sendBulkAction(action) {
 
-  window.onload = function () {
-      loadVendors();
-    };
-	
-  function showTemporaryMessage(message,background_color,font_color) {
-    if (currentMsgDiv) {
-		currentMsgDiv.remove();  // 移除之前的提示框
-	  }
+            const selectedPOs = Array.from(document.querySelectorAll(".row-select:checked"))
+                .map(cb => cb.value);
+            if (selectedPOs.length === 0) return;
 
-	const msgDiv = document.createElement("div");
-	msgDiv.textContent = message;
-	msgDiv.style.position = "fixed";
-	msgDiv.style.top = "50%";
-	msgDiv.style.left = "50%";
-	msgDiv.style.transform = "translate(-50%, -50%)";
-	msgDiv.style.backgroundColor = background_color;
-	msgDiv.style.color = font_color;
-	msgDiv.style.padding = "1rem 2rem";
-    	msgDiv.style.borderRadius = "8px";
-	msgDiv.style.boxShadow = "0 2px 10px rgba(0, 0, 0, 0.2)";
-	msgDiv.style.zIndex = 9999;
-	document.body.appendChild(msgDiv);
+            showTemporaryMessage("The change request has been submitted, please wait...", "yellow", "black"); // 新增	
 
-	currentMsgDiv = msgDiv;
-  }
+            fetch("https://nsy7navyr7.execute-api.us-east-1.amazonaws.com/default/BH_PO_tool_zp", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ action, po_numbers: selectedPOs })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    alert(`Action '${action}' completed: ${JSON.stringify(data)}`);
+                    searchOrders("Refreshing Data ... please wait");
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    alert("Failed to perform action.");
+                });
+        }
 
-  function hideTemporaryMessage() {
-    if (currentMsgDiv) {
-      currentMsgDiv.remove();
-      currentMsgDiv = null;
-    }
-  }
+        window.onload = function () {
+            loadVendors();
+        };
 
-  function downloadCSV() {
-    if (paginatedData.length === 0) {
-	  alert("No data to export.");
-	  return;
-    }
+        function showTemporaryMessage(message, background_color, font_color) {
+            if (currentMsgDiv) {
+                currentMsgDiv.remove();  // 移除之前的提示框
+            }
 
-    const headers = Object.keys(paginatedData[0]);
-    const rows = paginatedData.map(row =>
-	  headers.map(header => `"${(row[header] ?? "").toString().replace(/"/g, '""')}"`).join(",")
-    );
+            const msgDiv = document.createElement("div");
+            msgDiv.textContent = message;
+            msgDiv.style.position = "fixed";
+            msgDiv.style.top = "50%";
+            msgDiv.style.left = "50%";
+            msgDiv.style.transform = "translate(-50%, -50%)";
+            msgDiv.style.backgroundColor = background_color;
+            msgDiv.style.color = font_color;
+            msgDiv.style.padding = "1rem 2rem";
+            msgDiv.style.borderRadius = "8px";
+            msgDiv.style.boxShadow = "0 2px 10px rgba(0, 0, 0, 0.2)";
+            msgDiv.style.zIndex = 9999;
+            document.body.appendChild(msgDiv);
 
-    const csvContent = [
-	  headers.join(","),
-  	...rows
-    ].join("\n");
+            currentMsgDiv = msgDiv;
+        }
 
-    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.setAttribute("href", url);
-    link.setAttribute("download", `purchase_orders_${new Date().toISOString().slice(0, 10)}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  }
+        function hideTemporaryMessage() {
+            if (currentMsgDiv) {
+                currentMsgDiv.remove();
+                currentMsgDiv = null;
+            }
+        }
 
-</script>
+        function downloadCSV() {
+            if (paginatedData.length === 0) {
+                alert("No data to export.");
+                return;
+            }
+
+            const headers = Object.keys(paginatedData[0]);
+            const rows = paginatedData.map(row =>
+                headers.map(header => `"${(row[header] ?? "").toString().replace(/"/g, '""')}"`).join(",")
+            );
+
+            const csvContent = [
+                headers.join(","),
+                ...rows
+            ].join("\n");
+
+            const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.setAttribute("href", url);
+            link.setAttribute("download", `purchase_orders_${new Date().toISOString().slice(0, 10)}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+    </script>
 </body>
+
 </html>
