@@ -289,6 +289,7 @@
         let currentMsgDiv = null;
         let productManagementUrl = "";
         let productManagementWebAppUrl = "";
+        const account_configuration_sheet_url = "https://script.google.com/macros/s/AKfycbzXVEsecuPGoECZW4LOkn-zvIAZ6M6rJ4a6vuX5X-fhY4-DOa2UVFumwkMjN4S_-bKP/exec?email="; 
 
         document.addEventListener("DOMContentLoaded", async function () {
             const email = localStorage.getItem("user_email");
@@ -321,7 +322,8 @@
             const email = localStorage.getItem("user_email");
             if (!email) return;
 
-            const apiUrl = "https://script.google.com/macros/s/AKfycbzXVEsecuPGoECZW4LOkn-zvIAZ6M6rJ4a6vuX5X-fhY4-DOa2UVFumwkMjN4S_-bKP/exec?email=" + encodeURIComponent(email);
+            // const apiUrl = "https://script.google.com/macros/s/AKfycbzXVEsecuPGoECZW4LOkn-zvIAZ6M6rJ4a6vuX5X-fhY4-DOa2UVFumwkMjN4S_-bKP/exec?email=" + encodeURIComponent(email);
+            const apiUrl = account_configuration_sheet_url + encodeURIComponent(email);
 
             try {
                 const response = await fetch(apiUrl);
@@ -370,7 +372,8 @@
                 return;
             }
 
-            const apiUrl = "https://script.google.com/macros/s/AKfycbzXVEsecuPGoECZW4LOkn-zvIAZ6M6rJ4a6vuX5X-fhY4-DOa2UVFumwkMjN4S_-bKP/exec?email=" + encodeURIComponent(email);
+            // const apiUrl = "https://script.google.com/macros/s/AKfycbzXVEsecuPGoECZW4LOkn-zvIAZ6M6rJ4a6vuX5X-fhY4-DOa2UVFumwkMjN4S_-bKP/exec?email=" + encodeURIComponent(email);
+            const apiUrl = account_configuration_sheet_url + encodeURIComponent(email);
 
             try {
                 const response = await fetch(apiUrl);
