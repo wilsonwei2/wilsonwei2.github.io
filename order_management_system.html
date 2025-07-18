@@ -421,6 +421,7 @@
 
             try {
                 console.log("fetch to lambda function url");
+                console.time("Send request to lambda function");
                 const res = await fetch("https://w655lippb1.execute-api.us-east-1.amazonaws.com/default/BH_PO_tool_zp", {
                     method: "POST",
                     headers: {
@@ -429,15 +430,20 @@
                     body: JSON.stringify(params)
                 });
                 console.log("get response from lambda function");
+                console.timeEnd("Send request to lambda function");
+                console.time("get res.data");
                 const data = await res.json();
                 console.log("get response data");
+                console.timeEnd("get res.data");
                 paginatedData = data;
                 currentPage = 1;
 
                 await fetchProductManagementUrl(); // 保证每次都更新
                 console.log("start to render table");
+                console.time("render table based on data");
                 renderTable();
                 console.log("render table finished");
+                console.timeEnd("render table based on data");
                 hideTemporaryMessage();
             } catch (err) {
                 console.error("Error during search:", err);
