@@ -1,7 +1,7 @@
---Version: 2.4.2 [2025-7-19]
+--Version: 2.4.4 [2025-7-19]
 1. shorten product_management column width
 
---Version: 2.4.2 [2025-7-18]
+--Version: 2.4.3 [2025-7-18]
 1. replace the query po list lambda function url to bh_po_tool url
 
 --Version: 2.4.2 [2025-7-17]
