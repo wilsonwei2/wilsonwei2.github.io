@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>How to Safely Run Scripts in Google Sheets</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      line-height: 1.6;
+      background: #f9f9f9;
+      color: #333;
+    }
+    h1 {
+      color: #2c3e50;
+    }
+    .step {
+      margin-bottom: 20px;
+    }
+    .step img {
+      display: block;
+      margin: 10px 0;
+      max-width: 100%;
+      border: 1px solid #ccc;
+    }
+    .note {
+      background: #fff3cd;
+      padding: 15px;
+      border-left: 5px solid #ffc107;
+      margin: 20px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>How to Safely Run Scripts in Google Sheets</h1>
+
+  <div class="note">
+    ⚠️ To avoid accessing or modifying your personal Google Drive files, please switch to the system account (e.g. <strong>PO_TOOL@yourdomain.com</strong>) before using any custom menu or script.
+  </div>
+
+  <div class="step">
+    <h2>Step 1: Open the Google Sheet</h2>
+    <p>Navigate to the shared Google Sheet you want to work with.</p>
+  </div>
+
+  <div class="step">
+    <h2>Step 2: Click Your Profile Icon</h2>
+    <p>In the upper-right corner of the page, click your Google account profile image or initial.</p>
+    <img src="https://www.gstatic.com/images/icons/material/system/1x/account_circle_black_24dp.png" alt="Profile icon" />
+  </div>
+
+  <div class="step">
+    <h2>Step 3: Select the IT Account</h2>
+    <p>Choose the system account (e.g. <strong>testuser@bohme.com</strong> or <strong>PO_TOOL@yourdomain.com</strong>) from the list.</p>
+    <p>If it’s not listed, click “Add another account” and sign in with the credentials provided.</p>
+  </div>
+
+  <div class="step">
+    <h2>Step 4: Reload the Google Sheet</h2>
+    <p>After switching, reload the Sheet to ensure all scripts run under the correct account.</p>
+  </div>
+
+  <div class="step">
+    <h2>Step 5: Use the Menu</h2>
+    <p>You can now safely run scripts using the custom menu provided in the Google Sheet (e.g., “Product Management”, “Load PO”, etc.).</p>
+  </div>
+
+</body>
+</html>
