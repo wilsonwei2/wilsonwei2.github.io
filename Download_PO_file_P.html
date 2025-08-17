@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Purchase Order</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        font-size: 12px;
+      }
+      .header, .footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 10px;
+      }
+      .header .logo {
+        font-size: 32px;
+        font-weight: bold;
+        color: black;
+        background-color: white;
+        padding: 8px 20px;
+        border-radius: 5px;
+        letter-spacing: 1px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 11px;
+      }
+      th, td {
+        border: 1px solid #000;
+        padding: 4px;
+        text-align: center;
+      }
+      th {
+        background: #eee;
+      }
+      .bottom-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 40px;
+        margin-top: 20px;
+        font-size: 11px;
+      }
+      .notes-box {
+        flex: 1;
+        white-space: pre-wrap;
+        border: 2px solid #000;
+        padding: 10px;
+      }
+      .ups-box {
+        flex: 1;
+        border: 2px solid #000;
+        padding: 10px;
+        font-weight: bold;
+        text-align: center;
+        white-space: pre-line;
+      }
+      .gray-row {
+        background-color: #f2f2f2;
+        font-style: italic;
+        text-align: left;
+        padding-left: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Header -->
+    <div class="header">
+      <div class="logo">böhme</div>
+      <div>
+        <div><strong>SHIP TO / BILL TO:</strong></div>
+        <div>12094 S LIFE SCIENCE CT STE 100</div>
+        <div>DRAPER, UT 84020</div>
+      </div>
+      <div>
+        <strong>CONTACT INFORMATION</strong><br/>
+        Lauren@bohme.com<br/>
+        kristinad@bohme.com<br/>
+        Courtneys@bohme.com<br/>
+        (801) 430-9584 / (361) 728-8455
+      </div>
+      <div id="poInfo" style="text-align: left;">
+        <!-- JS填充 PO# 和 PO名称 -->
+      </div>
+    </div>
+
+    <div style="margin-bottom: 5px; white-space: nowrap;">
+      <strong>VENDOR:</strong> <span id="vendorName"></span>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <strong>DATE OF ORDER:</strong> <span id="poCreatedDate"></span>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <strong>CANCELATION DATE:</strong> <span id="cancelDate"></span>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <strong>EXPECTED SHIPPING WINDOW:</strong> <span id="expectedShipWindow"></span>
+    </div>
+
+    <!-- Table -->
+    <table id="poTable">
+      <thead>
+        <tr id="headerRow">
+          <th>ITEM_NAME</th>
+          <th>CATEGORY</th>
+          <th>SUBCATEGORY</th>
+          <th>DESCRIPTION</th>
+          <th>COLOR</th>
+          <!-- dynamic sizes go here -->
+          <th>label</th>
+          <th>tag</th>
+          <th>dtag</th>
+          <th>COST</th>
+          <th>RETAIL</th>
+          <th>SHIP</th>
+          <th>BUYER</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+
+    <div class="notes" style="margin-top: 20px; white-space: pre-line; text-align: center;">
+      PLEASE CALL ON ALL ORDERS THAT VARY FROM ORIGINAL ORDER QUANTITIES / COLORS / SIZES / STYLES. ALL SUBSTITUTIONS MUST RECEIVE PRIOR APPROVAL.
+
+      BOHME, LLC, RESERVES THE RIGHT TO CANCEL, REFUSE, OR RETURN AT VENDOR’S EXPENSE, ANY MERCHANDISE THAT IS DAMAGED, DEFECTIVE, OR THAT IS NOT DELIVERED BY THE PROMISED CANCEL DATE AS IT APPEARS ON THIS ORDER.
+
+      *** BOHME, LLC, WILL DISPOSE OF DAMAGED ITEMS AS A CHARITABLE CONTRIBUTION. ***
+
+      BY ACCEPTING THIS ORDER, THE VENDOR ACKNOWLEDGES THAT ANY DAMAGES OR DEFECTIVE ITEMS MAY BE KEPT AS MERCHANDISE CREDIT.
+    </div>
+
+    <!-- Notes & UPS Instructions side by side -->
+    <div class="bottom-row">
+      <div class="notes-box">
+        <strong>notes for warehouse</strong>
+        <div id="notesContent" style="margin-top: 8px;"></div>
+      </div>
+      <div class="ups-box">
+        SHIP ALL BOXES UPS GROUND / NO DECLARED VALUE
+
+        INVOICE MUST BE LOCATED ON OUTSIDE OF BOX
+
+        UPS ACCOUNT # E9526F
+      </div>
+    </div>
+
+    <script>
+      const STORE_KEYS = ["W", "CC", "FP", "UNI", "SP", "RC", "MOU", "STM", "NG", "LO", "MER", "GT", "MV", "SG", "SAN"];
+
+      function customSizeSort(sizes) {
+        const letterOrder = ["XXS", "XS", "S", "M", "L", "XL", "XXL", "XXXL"];
+        return sizes.sort((a, b) => {
+          const isANum = /^\d+$/.test(a);
+          const isBNum = /^\d+$/.test(b);
+          if (a === "00") return -1;
+          if (b === "00") return 1;
+          if (isANum && isBNum) return Number(a) - Number(b);
+          if (!isANum && !isBNum) {
+            const aIndex = letterOrder.indexOf(a);
+            const bIndex = letterOrder.indexOf(b);
+            if (aIndex === -1 && bIndex === -1) return a.localeCompare(b);
+            if (aIndex === -1) return 1;
+            if (bIndex === -1) return -1;
+            return aIndex - bIndex;
+          }
+          return isANum ? -1 : 1;
+        });
+      }
+
+      function getPOFromURL() {
+        const params = new URLSearchParams(window.location.search);
+        return params.get("po");
+      }
+
+      async function fetchPOData(poNumber) {
+        const url = `https://mfzjmsp5kk.execute-api.us-east-1.amazonaws.com/default/BH_PO_tool_zp?po=${encodeURIComponent(poNumber)}`;
+        const response = await fetch(url);
+        if (!response.ok) throw new Error("Network error");
+        const result = await response.json();
+        console.log("Lambda returned:", result); 
+        return result;
+      }
+
+      function renderPO(data) {
+        const firstItem = data[0] || {};
+
+        document.getElementById('poInfo').innerHTML = `
+          <strong>PO# ${firstItem.PO_NUMBER || ''}</strong><br/>
+          ${firstItem.PO_NAME || ''}<br/>
+          please reference bohme PO# on all documents
+        `;
+        document.getElementById('vendorName').textContent = firstItem.VENDOR || '';
+        document.getElementById('poCreatedDate').textContent = firstItem.PO_CREATED_DATE || '';
+        document.getElementById('cancelDate').textContent = firstItem.CANCELATION_DATE || '';
+        document.getElementById('expectedShipWindow').textContent = firstItem.EXPECTED_SHIPPING_WINDOW || '';
+        document.getElementById('notesContent').textContent = firstItem.NOTES || '';
+
+        const sizeSet = new Set();
+        data.forEach(item => {
+          Object.keys(item.size_dict || {}).forEach(size => sizeSet.add(size));
+        });
+        const allSizes = customSizeSort(Array.from(sizeSet));
+
+        const headerRow = document.getElementById('headerRow');
+        const colorIndex = 5;
+        allSizes.forEach((size, i) => {
+          const th = document.createElement('th');
+          th.textContent = size;
+          headerRow.insertBefore(th, headerRow.children[colorIndex + i]);
+        });
+
+        const tbody = document.getElementById('tableBody');
+        data.forEach(item => {
+          const tr = document.createElement('tr');
+          const baseCols = [
+            item.ITEM_NAME || '',
+            item.CATEGORY || '',
+            item.SUBCATEGORY || '',
+            item.DESCRIPTION || '',
+            item.COLOR || ''
+          ];
+          const sizeCols = allSizes.map(size => item.size_dict?.[size] ?? '');
+          const attrCols = [
+            item.line_attributes?.label ?? '',
+            item.line_attributes?.tag ?? '',
+            item.line_attributes?.dtag ?? '',
+            item.COST || '',
+            item.RETAIL || '',
+            item.SHIP ?? '',
+            item.BUYER ?? ''
+          ];
+          tr.innerHTML = [...baseCols, ...sizeCols, ...attrCols].map(v => `<td>${v}</td>`).join('');
+          tbody.appendChild(tr);
+
+          const trAlloc = document.createElement('tr');
+          trAlloc.className = 'gray-row';
+          let allocTableHtml = '<table style="border-collapse: collapse; width: auto; margin: 0; padding: 0;"><tr>';
+          STORE_KEYS.forEach(key => {
+            const val = item.allocation_stores?.[key] ?? '';
+            allocTableHtml += `<td style="border:none; padding:0 8px; text-align:center; min-width:30px;">${key}${val ? ' ' + val : ''}</td>`;
+          });
+          allocTableHtml += '</tr></table>';
+          trAlloc.innerHTML = `<td colspan="${12 + allSizes.length}" style="padding: 4px 8px; text-align: left;">${allocTableHtml}</td>`;
+          tbody.appendChild(trAlloc);
+        });
+      }
+
+      window.onload = async function () {
+        const po = getPOFromURL();
+        if (!po) {
+          alert("Missing PO number in URL.");
+          return;
+        }
+      
+        try {
+          const data = await fetchPOData(po);
+          renderPO(data);
+      
+          // ✅ 等数据渲染完后检查 autoDownload 参数
+          const urlParams = new URLSearchParams(window.location.search);
+          const shouldAutoDownload = urlParams.get("autoDownload") === "true";
+      
+          if (shouldAutoDownload) {
+            // ✅ 等待一点时间确保 DOM 渲染完成，再执行打印
+            setTimeout(() => {
+              window.print();
+            }, 1000); // 你可以根据页面复杂度加大时间（例如 1500ms）
+          }
+      
+        } catch (err) {
+          alert("Failed to load PO data: " + err.message);
+          console.error(err);
+        }
+      };
+
+    </script>
+  </body>
+</html>
