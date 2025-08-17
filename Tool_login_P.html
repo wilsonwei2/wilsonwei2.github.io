@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login - IOP Admin Portal</title>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to right, #e0eafc, #cfdef3);
+      height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .login-card {
+      background: white;
+      padding: 2.5rem 3rem;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      max-width: 400px;
+      width: 100%;
+    }
+
+    .login-card h1 {
+      font-size: 24px;
+      margin-bottom: 2rem;
+      color: #333;
+    }
+
+    .error {
+      color: #e53935;
+      margin-top: 1.5rem;
+      font-size: 0.95rem;
+    }
+
+    .footer {
+      margin-top: 1.5rem;
+      font-size: 0.8rem;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-card">
+    <h1>Sign in with your Google Workspace</h1>
+
+    <!-- Google Sign-in -->
+    <div id="g_id_onload"
+         data-client_id="612806372463-vchdq4uinqa6hda6962lbjv3a5rt0iji.apps.googleusercontent.com"
+         data-ux_mode="popup"
+         data-auto_prompt="false"
+         data-callback="handleCredentialResponse">
+    </div>
+
+    <div class="g_id_signin" data-type="standard" data-size="large"></div>
+
+    <div id="login-error" class="error"></div>
+    <div class="footer">Access limited to authorized accounts only</div>
+  </div>
+
+  <script>
+    const allowedEmails = [
+      "zhu.peng@frankandoak.com",
+      "wilson.wei@frankandoak.com",
+      "jayme.kushner@frankandoak.com",
+      "kristinad@bohme.com",
+      "sarahh@bohme.com",
+      "laureno@bohme.com",
+      "kadeec@bohme.com",
+      "courtneys@bohme.com",
+      "Vivien@bohme.com",
+      "leo.lo@frankandoak.com",
+      "testuser@bohme.com",
+	  "ucg_po_tool_user@ucghub.net"
+    ];
+
+    const redirectUrl = "https://wilsonwei2.github.io/iop_admin_portal_v1.html" //gitup url
+
+    function handleCredentialResponse(response) {
+      const token = response.credential;
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const email = payload.email;
+
+      if (!allowedEmails.includes(email)) {
+        document.getElementById("login-error").textContent =
+          "❌ Access denied by tool login html. Please use company approved account for po tool.";
+        return;
+      }
+
+      // Save login state
+      localStorage.setItem("user_email", email);
+
+      // Redirect to main portal
+      window.location.href = redirectUrl;
+    }
+
+    // ✅ Optional: 自动跳转（已登录）
+    /*
+    window.onload = () => {
+      const email = localStorage.getItem("user_email");
+      if (email && allowedEmails.includes(email)) {
+        window.location.href = redirectUrl;
+      }
+    };
+    */
+  </script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+--Version: 2.4.4 [2025-7-19]
+1. shorten product_management column width
+
+--Version: 2.4.3 [2025-7-18]
+1. replace the query po list lambda function url to bh_po_tool url
+
+--Version: 2.4.2 [2025-7-17]
+1. fixed a bug, when open create new po link, the message will always show on the webpage after the po creation google sheet has been opened
+
+--Version: 2.4.1 [2025-7-17]
+1. fixed a bug that the pop message will end prematurely before the vendor list was loaded
+
+--Version: 2.4.0 [2025-7-17]
+1. add download icon in the po_number list
+
+--Version: 2.3.4 [2025-7-16]
+1.turn to different product management webapp url based on email
+
+--Version: 2.3.3 [2025-7-16]
+1.Change the Google sheet method of jumping to product management sheet to dynamically obtain the Google sheet URL
+
+--Version: 2.3.2 [2025-7-16]
+1.add pop message when turn to po creation google sheet.
+
+--Version: 2.3.1 [2025-7-16]
+1.Change the Google sheet method of jumping to creattion PO to dynamically obtain the Google sheet URL
+
+--Version: 2.3.0 [2025-7-15]
+1.add new column: po_products
+2.set herf link for po_products
+
+--Version: 2.2.1 [2025-7-14]
+1.set new revision google sheet url as backend url of each po_number.
+2.remove the rule of order status judgment.
+
+--Version: 2.2.0 [2025-7-13]
+1.add user email login step.
+2.turn to different 'PO Creation' google sheet according to different user email.
+
+
+--Version: 2.1.2 [2025-07-06]
+1. Adjusted API endpoint of each backend program, make program run faster
+
+
+--Version: 2.1.1    [2025-06-28]
+1. Fixed an issue in version 2.1.0 where the "PO Number" column did not include a clickable link to the corresponding Google Sheet. 
+2. Fixed an issue in version 2.1.0 where orders with the status "Cancelled" or "Closed" could still be selected. 
+
+
+--Version: 2.1.0     [2025-06-27]
+1. Removed the original Bohme brand icon from the header.
+2. Updated the column names of the PO number list.
+3. Added a "Buyer" search field, allowing users to filter orders by 'buyer' name.
+4. Added a "Version Update Log" feature to allow users to view the current version and check the change history more conveniently.
