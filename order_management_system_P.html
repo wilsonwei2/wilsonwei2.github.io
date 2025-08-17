@@ -198,7 +198,7 @@
             <h2 style="margin: 0 auto; font-size: 3rem;">Purchase Order Management</h2>
             <div style="text-align: right; font-size: 14px;">
                 <span style="color: #007BFF;">V: 2.4.4</span><br />
-                <a href="https://wilsonwei2.github.io/po_tool_update_logs.txt" target="_blank"
+                <a href="https://wilsonwei2.github.io/order_management_system_P_update_logs.txt" target="_blank"
                     style="color: #007BFF; text-decoration: underline;">Update_logs</a>
             </div>
         </div>
@@ -289,12 +289,15 @@
         let currentMsgDiv = null;
         let productManagementUrl = "";
         let productManagementWebAppUrl = "";
-        const account_configuration_sheet_url = "https://script.google.com/macros/s/AKfycbzXVEsecuPGoECZW4LOkn-zvIAZ6M6rJ4a6vuX5X-fhY4-DOa2UVFumwkMjN4S_-bKP/exec?email="; 
+        const account_configuration_sheet_url = "https://script.google.com/macros/s/AKfycbzH6APydBT-Wm4qWbjOEhcwLJRR_eMQ9gCa4gpgmf9lwMapib68D8LWaFckormH3it2/exec?email="; 
+        const search_vendor_list_lambda_function_url = "https://zdv5h7htymhe7ujsv2fzhhnsly0whvrc.lambda-url.us-east-1.on.aws/query_vendor_list";
+        const query_orders_list_to_webpage_lambda_function_url = "https://zdv5h7htymhe7ujsv2fzhhnsly0whvrc.lambda-url.us-east-1.on.aws/query_purchase_orders_to_webpage";
+        const update_po_status_by_webpage_lambda_function_url = "https://zdv5h7htymhe7ujsv2fzhhnsly0whvrc.lambda-url.us-east-1.on.aws/update_po_status_by_webpage";
 
         document.addEventListener("DOMContentLoaded", async function () {
             const email = localStorage.getItem("user_email");
             if (!email) {
-                window.location.href = "https://wilsonwei2.github.io/Tool_login.html";
+                window.location.href = "https://wilsonwei2.github.io/Tool_login_P.html";
                 return;
             } else {
                 document.getElementById("userEmail").textContent = email;
@@ -315,14 +318,13 @@
 
         function logout() {
             localStorage.removeItem("user_email");
-            window.location.href = "https://wilsonwei2.github.io/Tool_login.html";
+            window.location.href = "https://wilsonwei2.github.io/Tool_login_P.html";
         }
 
         async function fetchProductManagementUrl() {
             const email = localStorage.getItem("user_email");
             if (!email) return;
 
-            // const apiUrl = "https://script.google.com/macros/s/AKfycbzXVEsecuPGoECZW4LOkn-zvIAZ6M6rJ4a6vuX5X-fhY4-DOa2UVFumwkMjN4S_-bKP/exec?email=" + encodeURIComponent(email);
             const apiUrl = account_configuration_sheet_url + encodeURIComponent(email);
 
             try {
@@ -343,7 +345,7 @@
         async function loadVendors() {
             showTemporaryMessage("Start the application, please wait", "yellow", "black");
             try {
-                const res = await fetch("https://inq7qmtb46.execute-api.us-east-1.amazonaws.com/default/BH_PO_tool_zp");
+                const res = await fetch(search_vendor_list_lambda_function_url);
                 const response = await res.json();
         
                 const vendorSelect = document.getElementById("vendor");
@@ -372,7 +374,6 @@
                 return;
             }
 
-            // const apiUrl = "https://script.google.com/macros/s/AKfycbzXVEsecuPGoECZW4LOkn-zvIAZ6M6rJ4a6vuX5X-fhY4-DOa2UVFumwkMjN4S_-bKP/exec?email=" + encodeURIComponent(email);
             const apiUrl = account_configuration_sheet_url + encodeURIComponent(email);
 
             try {
@@ -422,7 +423,7 @@
             try {
                 console.log("fetch to lambda function url");
                 console.time("Send request to lambda function");
-                const res = await fetch("https://w655lippb1.execute-api.us-east-1.amazonaws.com/default/BH_PO_tool_zp", {
+                const res = await fetch(query_orders_list_to_webpage_lambda_function_url, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
@@ -517,7 +518,7 @@
 
                         downloadIcon.onclick = function () {
                             const poNumber = row["PO Number"];
-                            const downloadUrl = `https://wilsonwei2.github.io/Download_PO_file.html?po=${encodeURIComponent(poNumber)}`;
+                            const downloadUrl = `https://wilsonwei2.github.io/Download_PO_file_P.html?po=${encodeURIComponent(poNumber)}`;
                             window.open(downloadUrl, "_blank");
                         };
 
@@ -654,7 +655,7 @@
 
             showTemporaryMessage("The change request has been submitted, please wait...", "yellow", "black"); // 新增	
 
-            fetch("https://nsy7navyr7.execute-api.us-east-1.amazonaws.com/default/BH_PO_tool_zp", {
+            fetch(update_po_status_by_webpage_lambda_function_url, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ action, po_numbers: selectedPOs })
@@ -733,3 +734,4 @@
 </body>
 
 </html>
+
