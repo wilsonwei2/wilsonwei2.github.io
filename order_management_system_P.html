@@ -395,6 +395,8 @@
         }
 
         async function searchOrders(message = "Querying data...  please wait") {
+            console.log("start to query old PO list");
+            console.time("get query conditions from webpage");
             const poNumber = document.getElementById("poNumber").value.trim();
             const vendor = document.getElementById("vendor").value.trim();
             const order_status = document.getElementById("order_status").value.trim();
@@ -402,7 +404,9 @@
             const endDate = document.getElementById("endDate").value;
             const itemname = document.getElementById("ItemName").value;
             const buyer = document.getElementById("buyer").value;
-
+            console.timeEnd("get query conditions from webpage");
+            console.log("get query conditions over");
+            
             if (!poNumber && !vendor && !startDate && !endDate && !order_status && !itemname && !buyer) {
                 alert("Please enter at least one search condition.");
                 return;
@@ -734,5 +738,6 @@
 </body>
 
 </html>
+
 
 
