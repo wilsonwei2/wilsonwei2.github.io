@@ -197,7 +197,7 @@
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
             <h2 style="margin: 0 auto; font-size: 3rem;">Purchase Order Management</h2>
             <div style="text-align: right; font-size: 14px;">
-                <span style="color: #007BFF;">V: 2.4.4</span><br />
+                <span style="color: #007BFF;">V: 2.5.4</span><br />
                 <a href="https://wilsonwei2.github.io/po_tool_update_logs.txt" target="_blank"
                     style="color: #007BFF; text-decoration: underline;">Update_logs</a>
             </div>
@@ -322,7 +322,6 @@
             const email = localStorage.getItem("user_email");
             if (!email) return;
 
-            // const apiUrl = "https://script.google.com/macros/s/AKfycbzXVEsecuPGoECZW4LOkn-zvIAZ6M6rJ4a6vuX5X-fhY4-DOa2UVFumwkMjN4S_-bKP/exec?email=" + encodeURIComponent(email);
             const apiUrl = account_configuration_sheet_url + encodeURIComponent(email);
 
             try {
@@ -362,32 +361,32 @@
             }
         }
 
-async function openGoogleSheet() {
-  showTemporaryMessage("Redirecting, please wait", "yellow", "black");
-  const email = localStorage.getItem("user_email");
-  if (!email) {
-    alert("User not signed in.");
-    hideTemporaryMessage();
-    return;
-  }
-
-  try {
-    const response = await fetch(account_configuration_sheet_url + encodeURIComponent(email));
-    const data = await response.json();
-
-    if (data.po_url) {
-      hideTemporaryMessage();
-      window.location.href = data.po_url;  // redirect in the same tab
-    } else {
-      alert("Your email is not authorized to create PO.");
-      hideTemporaryMessage();
-    }
-  } catch (err) {
-    console.error("Error fetching sheet URL:", err);
-    alert("Failed to fetch sheet URL.");
-    hideTemporaryMessage();
-  }
-}
+        async function openGoogleSheet() {
+          showTemporaryMessage("Redirecting, please wait", "yellow", "black");
+          const email = localStorage.getItem("user_email");
+          if (!email) {
+            alert("User not signed in.");
+            hideTemporaryMessage();
+            return;
+          }
+        
+          try {
+            const response = await fetch(account_configuration_sheet_url + encodeURIComponent(email));
+            const data = await response.json();
+        
+            if (data.po_url) {
+              hideTemporaryMessage();
+              window.location.href = data.po_url; 
+            } else {
+              alert("Your email is not authorized to create PO.");
+              hideTemporaryMessage();
+            }
+          } catch (err) {
+            console.error("Error fetching sheet URL:", err);
+            alert("Failed to fetch sheet URL.");
+            hideTemporaryMessage();
+          }
+        }
 
        
         async function searchOrders(message = "Querying data...  please wait") {
@@ -571,7 +570,7 @@ async function openGoogleSheet() {
                                 const result = await res.text();
 
                                 if (result.toLowerCase().includes("success") || result.toLowerCase().includes("ok")) {
-                                    window.open(productManagementUrl, "_blank");
+                                    window.open(productManagementUrl, "_self");
                                 } else {
                                     alert("Failed to rename Google Sheet before opening.");
                                 }
@@ -730,4 +729,5 @@ async function openGoogleSheet() {
 </body>
 
 </html>
+
 
