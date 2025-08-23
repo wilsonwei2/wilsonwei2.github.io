@@ -1,3 +1,6 @@
+--Version: 2.1.2   [2025-8-23]
+1.when customer click the PO Tool link, set the new webpage replace the old webpage, instead of add a new webpage
+
 --Version: 2.1.1   [2025-7-17]
 1.remove local test link
 
@@ -10,3 +13,4 @@
 --Version: 2.0.0   [2025-07-02]
 1. Removed the original FAO brand icon from the login webpage.
 2. Added collapsible/expandable interaction functionality to each main business section (first-level module) and its subsections (second-level modules) on the main dashboard. Users can click the headers to expand or collapse content, improving the organization and readability of the page.
+
