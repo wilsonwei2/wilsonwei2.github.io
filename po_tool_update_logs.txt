@@ -1,5 +1,6 @@
 --Version: 2.5.4 [2025-8-23]
 1.set links of PO tool/Product management will not open new webpag, just repalce the old page
+2.add new filter 'Exp Date' in the webpage
 
 --Version: 2.4.4 [2025-7-19]
 1. shorten product_management column width
@@ -55,4 +56,5 @@
 2. Updated the column names of the PO number list.
 3. Added a "Buyer" search field, allowing users to filter orders by 'buyer' name.
 4. Added a "Version Update Log" feature to allow users to view the current version and check the change history more conveniently.
+
 
