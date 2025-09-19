@@ -386,7 +386,7 @@
 
                 if (data.po_url) {
                     hideTemporaryMessage();
-                    window.open(data.po_url, "_blank");
+                    window.open(data.po_url, "_self");
                 } else {
                     alert("Your email is not authorized to create PO.");
                     hideTemporaryMessage();
@@ -581,7 +581,7 @@
                                 const result = await res.text();
 
                                 if (result.toLowerCase().includes("success") || result.toLowerCase().includes("ok")) {
-                                    window.open(productManagementUrl, "_blank");
+                                    window.open(productManagementUrl, "_self");
                                 } else {
                                     alert("Failed to rename Google Sheet before opening.");
                                 }
@@ -741,6 +741,7 @@
 </body>
 
 </html>
+
 
 
 
