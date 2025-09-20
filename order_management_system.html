@@ -346,7 +346,7 @@
         async function loadVendors() {
             showTemporaryMessage("Start the application, please wait", "yellow", "black");
             try {
-                const res = await fetch("https://inq7qmtb46.execute-api.us-east-1.amazonaws.com/default/BH_PO_tool_zp");
+                const res = await fetch("https://jtc2mbeqlcuyazyzfyr5p2aw2m0iuccu.lambda-url.us-east-1.on.aws/query_vendor_list");
                 const response = await res.json();
         
                 const vendorSelect = document.getElementById("vendor");
@@ -424,7 +424,7 @@
             try {
                 console.log("fetch to lambda function url");
                 console.time("Send request to lambda function");
-                const res = await fetch("https://w655lippb1.execute-api.us-east-1.amazonaws.com/default/BH_PO_tool_zp", {
+                const res = await fetch("https://jtc2mbeqlcuyazyzfyr5p2aw2m0iuccu.lambda-url.us-east-1.on.aws/query_purchase_orders_to_webpage", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
@@ -657,7 +657,7 @@
 
             showTemporaryMessage("The change request has been submitted, please wait...", "yellow", "black"); // 新增	
 
-            fetch("https://nsy7navyr7.execute-api.us-east-1.amazonaws.com/default/BH_PO_tool_zp", {
+            fetch("https://jtc2mbeqlcuyazyzfyr5p2aw2m0iuccu.lambda-url.us-east-1.on.aws/update_po_status_by_webpage", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ action, po_numbers: selectedPOs })
@@ -736,6 +736,7 @@
 </body>
 
 </html>
+
 
 
 
