@@ -173,7 +173,7 @@
       }
 
       async function fetchPOData(poNumber) {
-        const url = `https://mfzjmsp5kk.execute-api.us-east-1.amazonaws.com/default/BH_PO_tool_zp?po=${encodeURIComponent(poNumber)}`;
+        const url = `https://jtc2mbeqlcuyazyzfyr5p2aw2m0iuccu.lambda-url.us-east-1.on.aws/load_old_po_to_googlesheet?po=${encodeURIComponent(poNumber)}`;
         const response = await fetch(url);
         if (!response.ok) throw new Error("Network error");
         const result = await response.json();
@@ -276,3 +276,4 @@
     </script>
   </body>
 </html>
+
