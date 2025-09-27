@@ -201,6 +201,9 @@
                 <a href="https://wilsonwei2.github.io/po_tool_update_logs.txt" target="_blank"
                     style="color: #007BFF; text-decoration: underline;">Update_logs</a>
             </div>
+            <div style="margin-left: auto;">
+                <button onclick="downloadCSV()">Export Search Results</button>
+            </div>
         </div>
 
 
@@ -253,12 +256,11 @@
         <div class="form-row">
             <div class="button-group" style="width: 100%;">
                 <div style="display: flex; gap: 1rem;">
-                    <button onclick="searchOrders()">Search</button>
                     <button onclick="clearResults()">Clear</button>
                     <button onclick="openGoogleSheet()">Create New PO</button>
                 </div>
                 <div style="margin-left: auto;">
-                    <button onclick="downloadCSV()">Export Search Results</button>
+                    <button onclick="searchOrders()">Search</button>
                 </div>
             </div>
 
@@ -736,6 +738,7 @@
 </body>
 
 </html>
+
 
 
 
