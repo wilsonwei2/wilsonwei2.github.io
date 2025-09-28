@@ -349,12 +349,12 @@
             showTemporaryMessage("Start the application, please wait", "yellow", "black");
             try {
                 const res = await fetch("https://jtc2mbeqlcuyazyzfyr5p2aw2m0iuccu.lambda-url.us-east-1.on.aws/get_vendor_list_from_s3");
-                const data = await res.json();                  // { statusCode, headers, body }
-                console.log("Lambda response data is:", data);
-                const bodyObj = JSON.parse(data.body);          // { vendors: [...] }
-                const vendors = bodyObj.vendors;
-                console.log("vendors is", vendors);
-                const vendorSelect = document.getElementById("vendor"); // ✅ 必须先获取元素
+                const data = await res.json();  // data 直接是 { vendors: [...] }
+        
+                // ✅ 直接取 vendors
+                const vendors = data.vendors || [];
+        
+                const vendorSelect = document.getElementById("vendor"); 
                 vendorSelect.innerHTML = '<option value="">--Select Vendor--</option>'; // 清空原有选项
         
                 vendors.forEach(vendorName => {
@@ -744,6 +744,7 @@
 </body>
 
 </html>
+
 
 
 
