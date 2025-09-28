@@ -352,13 +352,17 @@
                 const data = await res.json();                  // { statusCode, headers, body }
                 const bodyObj = JSON.parse(data.body);          // { vendors: [...] }
                 const vendors = bodyObj.vendors;
+        
+                const vendorSelect = document.getElementById("vendor"); // ✅ 必须先获取元素
                 vendorSelect.innerHTML = '<option value="">--Select Vendor--</option>'; // 清空原有选项
+        
                 vendors.forEach(vendorName => {
                     const option = document.createElement("option");
                     option.value = vendorName;
                     option.textContent = vendorName;
                     vendorSelect.appendChild(option);
                 });
+        
                 $('#vendor').select2({ width: '100%' });
             } catch (err) {
                 console.error("Error loading vendors:", err);
@@ -739,6 +743,7 @@
 </body>
 
 </html>
+
 
 
 
