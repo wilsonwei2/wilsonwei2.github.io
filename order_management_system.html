@@ -298,13 +298,13 @@
         const account_configuration_sheet_url = "https://script.google.com/macros/s/AKfycbzXVEsecuPGoECZW4LOkn-zvIAZ6M6rJ4a6vuX5X-fhY4-DOa2UVFumwkMjN4S_-bKP/exec?email="; 
 
         document.addEventListener("DOMContentLoaded", async function () {
-            const email = localStorage.getItem("user_email");
-            if (!email) {
-                window.location.href = "https://wilsonwei2.github.io/Tool_login.html";
-                return;
-            } else {
-                document.getElementById("userEmail").textContent = email;
-            }
+            // const email = localStorage.getItem("user_email");
+            // if (!email) {
+            //     window.location.href = "https://wilsonwei2.github.io/Tool_login.html";
+            //     return;
+            // } else {
+            //     document.getElementById("userEmail").textContent = email;
+            // }
 
             showTemporaryMessage("Loading... please wait", "yellow", "black");
 
@@ -739,6 +739,7 @@
 </body>
 
 </html>
+
 
 
 
