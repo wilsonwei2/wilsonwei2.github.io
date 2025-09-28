@@ -352,10 +352,10 @@
                 const vendors = await res.json();
                 const vendorSelect = document.getElementById("vendor");
                 vendorSelect.innerHTML = '<option value="">--Select Vendor--</option>'; // 清空原有选项
-                vendors.forEach(vendor => {
+                vendors.forEach(vendorName => {
                     const option = document.createElement("option");
-                    option.value = vendor.vendor_name;
-                    option.textContent = vendor.vendor_name;
+                    option.value = vendorName;
+                    option.textContent = vendorName;
                     vendorSelect.appendChild(option);
                 });
                 $('#vendor').select2({ width: '100%' });
@@ -738,6 +738,7 @@
 </body>
 
 </html>
+
 
 
 
